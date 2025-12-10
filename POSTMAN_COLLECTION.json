@@ -1,0 +1,299 @@
+{
+  "info": {
+    "name": "SwipeLab API",
+    "description": "API collection untuk SwipeLab Design Platform",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "YOUR_TOKEN_HERE",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": ["base_url"],
+              "path": ["api", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/categories/1",
+              "host": ["base_url"],
+              "path": ["api", "categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": ["base_url"],
+              "path": ["api", "categories"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Photography\",\n  \"slug\": \"photography\",\n  \"description\": \"Photography and photo editing\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Designs",
+      "item": [
+        {
+          "name": "Get My Designs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/designs/my",
+              "host": ["base_url"],
+              "path": ["api", "designs", "my"]
+            }
+          }
+        },
+        {
+          "name": "Get Design by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/designs/1",
+              "host": ["base_url"],
+              "path": ["api", "designs", "1"]
+            }
+          }
+        },
+        {
+          "name": "Upload Design",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/designs",
+              "host": ["base_url"],
+              "path": ["api", "designs"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "My Awesome Design",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "A beautiful UI/UX design for modern apps",
+                  "type": "text"
+                },
+                {
+                  "key": "category_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "path/to/design.jpg"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Swipe",
+      "item": [
+        {
+          "name": "Get Random Design",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/swipe/random?category_id=1",
+              "host": ["base_url"],
+              "path": ["api", "swipe", "random"],
+              "query": [
+                {
+                  "key": "category_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Swipe Left",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/swipe/left",
+              "host": ["base_url"],
+              "path": ["api", "swipe", "left"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"design_id\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Swipe Right",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/swipe/right",
+              "host": ["base_url"],
+              "path": ["api", "swipe", "right"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"design_id\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Swipe History",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/swipe/history",
+              "host": ["base_url"],
+              "path": ["api", "swipe", "history"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feedback",
+      "item": [
+        {
+          "name": "Get Design Feedback",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/designs/1/feedback",
+              "host": ["base_url"],
+              "path": ["api", "designs", "1", "feedback"]
+            }
+          }
+        },
+        {
+          "name": "Get My Feedback Received",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/feedback/received",
+              "host": ["base_url"],
+              "path": ["api", "feedback", "received"]
+            }
+          }
+        },
+        {
+          "name": "Get My Feedback Given",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/feedback/given",
+              "host": ["base_url"],
+              "path": ["api", "feedback", "given"]
+            }
+          }
+        },
+        {
+          "name": "Submit Feedback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/feedback",
+              "host": ["base_url"],
+              "path": ["api", "feedback"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"design_id\": 1,\n  \"comment\": \"Great design! Love the color scheme and layout.\",\n  \"rating\": 5\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/dashboard",
+              "host": ["base_url"],
+              "path": ["api", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Get Public Profile",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/profile/john_doe",
+              "host": ["base_url"],
+              "path": ["api", "profile", "john_doe"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+}
