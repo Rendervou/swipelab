@@ -11,7 +11,7 @@ class Design extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'category_id', 'title', 'description', 'image_path'];
+    protected $fillable = ['user_id', 'category_id', 'title', 'description', 'image_path', 'is_featured', 'status', 'views', 'likes'];
 
     protected $hidden = ['image_path'];
 

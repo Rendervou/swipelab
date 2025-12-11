@@ -25,6 +25,8 @@ class User extends Authenticatable
         'password',
         'role',
         'last_admin_login',
+        'xp',
+        'avatar_url',
     ];
 
     /**
@@ -106,18 +108,14 @@ class User extends Authenticatable
     }
     public function getTotalPoints(): int
     {
-        return $this->points?->total_points ?? 0;
+        return $this->points?->total_points ?? $this->xp ?? 0;
     }
 
-    public function getLevel(): string
+    public function getLevel(): int
     {
-        $points = $this->getTotalPoints();
-        if ($points >= 1000) return 'Legend';
-        if ($points >= 500) return 'Expert';
-        if ($points >= 200) return 'Master';
-        if ($points >= 100) return 'Advanced';
-        if ($points >= 50) return 'Intermediate';
-        return 'Beginner';
+        $xp = $this->xp ?? 0;
+        // Level 1: 0-50, Level 2: 50-150, Level 3: 150-300, Level 4: 300-500, etc.
+        return max(1, intdiv($xp, 100) + 1);
     }
 
     // Role-based methods
