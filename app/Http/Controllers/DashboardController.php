@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Design;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,26 +18,22 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        $data = [
-            'user' => $user,
-            'total_uploads' => $user->designs()->count(),
+        // Get user statistics
+        $stats = [
+            'designs_count' => $user->designs()->count(),
             'total_likes' => $user->designs()->sum('likes'),
-            'feedback_received' => $user->designs()->sum(function ($design) {
-                return $design->feedbacks()->count();
-            }),
+            'feedback_count' => $user->designs()->withCount('feedbacks')->get()->sum('feedbacks_count'),
             'total_points' => $user->getTotalPoints(),
-            'level' => $user->getLevel(),
-            'badges' => $user->badges()->get(),
-            'recent_designs' => $user->designs()->latest()->take(5)->get(),
-            'recent_feedback' => $user->designs()
-                ->with('feedbacks.user')
-                ->latest()
-                ->take(5)
-                ->get()
-                ->flatMap->feedbacks,
         ];
 
-        return response()->json($data);
+        // Get recent designs with relationships
+        $recentDesigns = $user->designs()
+            ->with(['category', 'feedbacks'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('dashboard', compact('stats', 'recentDesigns'));
     }
 
     public function userProfile($username)

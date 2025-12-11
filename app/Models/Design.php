@@ -46,6 +46,9 @@ class Design extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    // Fixed getImageUrlAttribute method
+    public function getImageUrlAttribute()
     {
         return asset('storage/' . $this->image_path);
     }

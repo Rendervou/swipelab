@@ -9,13 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+public function up(): void
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('design_id')->constrained('designs')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('annotation_id')->nullable()->constrained('design_annotations')->cascadeOnDelete();
+            $table->foreignId('annotation_id')->nullable()->constrained('feedback_annotations')->cascadeOnDelete();
             $table->text('content');
             $table->integer('likes')->default(0);
             $table->timestamps();

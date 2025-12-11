@@ -1,40 +1,34 @@
 <?php
 
-namespace App\Models;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
-class FeedbackAnnotation extends Model
+return new class extends Migration
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'design_id',
-        'user_id',
-        'comment',
-        'coordinates',
-        'annotation_type',
-    ];
-
-    protected $casts = [
-        'coordinates' => 'json',
-    ];
-
-    public function design(): BelongsTo
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        return $this->belongsTo(Design::class);
+        Schema::create('feedback_annotations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('design_id')->constrained('designs')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->text('comment');
+            $table->json('coordinates'); // {x, y, width, height}
+            $table->string('annotation_type')->default('comment'); // comment, highlight, question
+            $table->timestamps();
+            $table->index('design_id');
+            $table->index('user_id');
+        });
     }
 
-    public function user(): BelongsTo
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
-        return $this->belongsTo(User::class);
+        Schema::dropIfExists('feedback_annotations');
     }
-
-    public function comments(): HasMany
-    {
-        return $this->hasMany(Comment::class, 'annotation_id');
-    }
-}
+};

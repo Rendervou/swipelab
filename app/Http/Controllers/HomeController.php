@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Design;
 use App\Models\User;
+use App\Models\Feedback;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    /**
-     * Display the home page with featured designs, recent uploads, and top reviewers
-     */
     public function index()
     {
         // Get featured designs (limit 4)
@@ -30,7 +28,7 @@ class HomeController extends Controller
             ->get()
             ->map(fn($design) => $this->formatDesignData($design));
 
-        // Get top reviewers (limit 5) - based on feedback count
+        // Get top reviewers (limit 5)
         $topReviewers = User::withCount('feedbacks')
             ->orderBy('feedbacks_count', 'desc')
             ->orderBy('xp', 'desc')
@@ -44,7 +42,7 @@ class HomeController extends Controller
         // Platform stats
         $stats = [
             'total_designs' => Design::where('status', 'approved')->count(),
-            'total_feedbacks' => \App\Models\Feedback::count(),
+            'total_feedbacks' => Feedback::count(),
             'total_designers' => User::count(),
         ];
 
@@ -57,9 +55,6 @@ class HomeController extends Controller
         ]);
     }
 
-    /**
-     * Format design data for display
-     */
     private function formatDesignData(Design $design)
     {
         return [
@@ -80,9 +75,6 @@ class HomeController extends Controller
         ];
     }
 
-    /**
-     * Format user data for display
-     */
     private function formatUserData(User $user)
     {
         return [
