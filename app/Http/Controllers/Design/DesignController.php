@@ -20,11 +20,18 @@ class DesignController extends Controller
 
     //     return view('designs.index', compact('designs'));
     // }
-    public function index()
+   public function index(Request $request)
 {
-    $designs = \App\Models\Design::latest()->get();
+    $swipedIds = Swipe::where('user_id', auth()->id())
+        ->pluck('design_id');
+
+    $designs = Design::whereNotIn('id', $swipedIds)
+        ->latest()
+        ->get();
+
     return view('designs.index', compact('designs'));
 }
+
 
 
     public function create()
