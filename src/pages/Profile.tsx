@@ -1,0 +1,304 @@
+import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Header } from '@/components/layout/Header';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Camera, Loader2, Save, X, Plus } from 'lucide-react';
+import { toast } from 'sonner';
+
+const profileSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters').max(50),
+  bio: z.string().max(300).optional(),
+});
+
+type ProfileForm = z.infer<typeof profileSchema>;
+
+const Profile = () => {
+  const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [newSkill, setNewSkill] = useState('');
+
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<ProfileForm>({
+    resolver: zodResolver(profileSchema),
+  });
+
+  useEffect(() => {
+    if (user) {
+      fetchProfile();
+    }
+  }, [user]);
+
+  const fetchProfile = async () => {
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (data) {
+      setValue('name', data.name || '');
+      setValue('bio', data.bio || '');
+      setAvatarUrl(data.avatar_url);
+      setSkills(data.skills || []);
+    }
+
+    setLoading(false);
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Avatar must be less than 2MB');
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/avatar.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+
+      const urlWithTimestamp = `${publicUrl}?t=${Date.now()}`;
+
+      await supabase
+        .from('profiles')
+        .update({ avatar_url: urlWithTimestamp })
+        .eq('id', user.id);
+
+      setAvatarUrl(urlWithTimestamp);
+      toast.success('Avatar updated!');
+    } catch (error: any) {
+      console.error('Avatar upload error:', error);
+      toast.error('Failed to upload avatar');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const addSkill = () => {
+    const skill = newSkill.trim();
+    if (skill && !skills.includes(skill) && skills.length < 10) {
+      setSkills([...skills, skill]);
+      setNewSkill('');
+    }
+  };
+
+  const removeSkill = (skillToRemove: string) => {
+    setSkills(skills.filter(s => s !== skillToRemove));
+  };
+
+  const onSubmit = async (data: ProfileForm) => {
+    if (!user) return;
+
+    setSaving(true);
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        name: data.name,
+        bio: data.bio || null,
+        skills,
+      })
+      .eq('id', user.id);
+
+    setSaving(false);
+
+    if (error) {
+      toast.error('Failed to update profile');
+    } else {
+      toast.success('Profile updated!');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center py-32">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="container py-8 md:py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-2xl mx-auto"
+        >
+          <h1 className="font-display text-3xl font-bold mb-2">Profile</h1>
+          <p className="text-muted-foreground mb-8">
+            Customize how others see you
+          </p>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            {/* Avatar */}
+            <div className="flex items-center gap-6">
+              <div className="relative">
+                <Avatar className="h-24 w-24 border-4 border-primary/20">
+                  <AvatarImage src={avatarUrl || undefined} />
+                  <AvatarFallback className="bg-gradient-primary text-primary-foreground text-2xl font-semibold">
+                    {user?.email?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="absolute -bottom-2 -right-2 h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 transition-colors disabled:opacity-50"
+                >
+                  {uploading ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Camera className="h-5 w-5" />
+                  )}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="hidden"
+                />
+              </div>
+              <div>
+                <p className="font-medium">Profile Photo</p>
+                <p className="text-sm text-muted-foreground">
+                  Click the camera to upload a new photo
+                </p>
+              </div>
+            </div>
+
+            {/* Name */}
+            <div className="space-y-2">
+              <Label htmlFor="name">Display Name</Label>
+              <Input
+                {...register('name')}
+                id="name"
+                placeholder="Your name"
+                className="h-12"
+              />
+              {errors.name && (
+                <p className="text-sm text-destructive">{errors.name.message}</p>
+              )}
+            </div>
+
+            {/* Bio */}
+            <div className="space-y-2">
+              <Label htmlFor="bio">Bio</Label>
+              <Textarea
+                {...register('bio')}
+                id="bio"
+                placeholder="Tell the community about yourself..."
+                rows={4}
+              />
+              {errors.bio && (
+                <p className="text-sm text-destructive">{errors.bio.message}</p>
+              )}
+            </div>
+
+            {/* Skills */}
+            <div className="space-y-4">
+              <Label>Skills</Label>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {skills.map((skill) => (
+                  <Badge
+                    key={skill}
+                    variant="secondary"
+                    className="px-3 py-1 text-sm flex items-center gap-1"
+                  >
+                    {skill}
+                    <button
+                      type="button"
+                      onClick={() => removeSkill(skill)}
+                      className="ml-1 hover:text-destructive"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  value={newSkill}
+                  onChange={(e) => setNewSkill(e.target.value)}
+                  placeholder="Add a skill (e.g., Figma, UI Design)"
+                  className="h-10"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addSkill();
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addSkill}
+                  disabled={!newSkill.trim() || skills.length >= 10}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {skills.length}/10 skills added
+              </p>
+            </div>
+
+            <Button
+              type="submit"
+              variant="gradient"
+              size="lg"
+              className="w-full"
+              disabled={saving}
+            >
+              {saving ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <>
+                  <Save className="h-5 w-5" />
+                  Save Changes
+                </>
+              )}
+            </Button>
+          </form>
+        </motion.div>
+      </main>
+    </div>
+  );
+};
+
+export default Profile;

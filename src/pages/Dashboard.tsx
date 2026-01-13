@@ -1,0 +1,256 @@
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Header } from '@/components/layout/Header';
+import { DesignCard } from '@/components/design/DesignCard';
+import { StatCard } from '@/components/stats/StatCard';
+import { AIFeedbackCard } from '@/components/ai/AIFeedbackCard';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { Upload, Heart, Eye, Sparkles, Image, Loader2, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
+
+interface Design {
+  id: string;
+  title: string;
+  image_url: string;
+  category: string;
+  description?: string;
+  created_at: string;
+  like_count?: number;
+}
+
+interface AIFeedback {
+  id: string;
+  design_id: string;
+  strengths: string[];
+  weaknesses: string[];
+  ux_score: number;
+  suggestion: string;
+  designs?: { title: string };
+}
+
+const Dashboard = () => {
+  const { user } = useAuth();
+  const [designs, setDesigns] = useState<Design[]>([]);
+  const [aiFeedbacks, setAiFeedbacks] = useState<AIFeedback[]>([]);
+  const [stats, setStats] = useState({
+    totalDesigns: 0,
+    totalLikes: 0,
+    totalSwipes: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      fetchDashboardData();
+    }
+  }, [user]);
+
+  const fetchDashboardData = async () => {
+    if (!user) return;
+
+    setLoading(true);
+
+    // Fetch user's designs
+    const { data: designsData } = await supabase
+      .from('designs')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    // Get like counts for each design
+    if (designsData) {
+      const designsWithLikes = await Promise.all(
+        designsData.map(async (design) => {
+          const { count } = await supabase
+            .from('swipes')
+            .select('*', { count: 'exact', head: true })
+            .eq('design_id', design.id)
+            .eq('type', 'like');
+          
+          return { ...design, like_count: count || 0 };
+        })
+      );
+      setDesigns(designsWithLikes);
+    }
+
+    // Fetch AI feedbacks
+    const { data: feedbacksData } = await supabase
+      .from('ai_feedback')
+      .select(`
+        *,
+        designs!inner (title, user_id)
+      `)
+      .eq('designs.user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (feedbacksData) {
+      const formattedFeedbacks = feedbacksData.map(fb => ({
+        ...fb,
+        strengths: Array.isArray(fb.strengths) ? fb.strengths : [],
+        weaknesses: Array.isArray(fb.weaknesses) ? fb.weaknesses : [],
+      }));
+      setAiFeedbacks(formattedFeedbacks as any);
+    }
+
+    // Calculate stats
+    const { count: totalLikes } = await supabase
+      .from('swipes')
+      .select('*', { count: 'exact', head: true })
+      .eq('type', 'like')
+      .in('design_id', (designsData || []).map(d => d.id));
+
+    const { count: totalSwipes } = await supabase
+      .from('swipes')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id);
+
+    setStats({
+      totalDesigns: designsData?.length || 0,
+      totalLikes: totalLikes || 0,
+      totalSwipes: totalSwipes || 0,
+    });
+
+    setLoading(false);
+  };
+
+  const handleDeleteDesign = async (designId: string) => {
+    if (!confirm('Are you sure you want to delete this design?')) return;
+
+    const { error } = await supabase
+      .from('designs')
+      .delete()
+      .eq('id', designId);
+
+    if (error) {
+      toast.error('Failed to delete design');
+    } else {
+      toast.success('Design deleted');
+      setDesigns(prev => prev.filter(d => d.id !== designId));
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center py-32">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="container py-8 md:py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h1 className="font-display text-3xl font-bold mb-2">Dashboard</h1>
+          <p className="text-muted-foreground mb-8">
+            Track your designs and feedback
+          </p>
+
+          {/* Stats */}
+          <div className="grid gap-4 md:grid-cols-3 mb-8">
+            <StatCard
+              label="Total Designs"
+              value={stats.totalDesigns}
+              icon={Image}
+              color="lavender"
+              delay={0}
+            />
+            <StatCard
+              label="Likes Received"
+              value={stats.totalLikes}
+              icon={Heart}
+              color="coral"
+              delay={0.1}
+            />
+            <StatCard
+              label="Designs Swiped"
+              value={stats.totalSwipes}
+              icon={Eye}
+              color="mint"
+              delay={0.2}
+            />
+          </div>
+
+          {/* Tabs */}
+          <Tabs defaultValue="designs" className="space-y-6">
+            <TabsList className="grid w-full max-w-md grid-cols-2">
+              <TabsTrigger value="designs" className="flex items-center gap-2">
+                <Image className="h-4 w-4" />
+                My Designs
+              </TabsTrigger>
+              <TabsTrigger value="ai-feedback" className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                AI Feedback
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="designs">
+              {designs.length === 0 ? (
+                <div className="text-center py-16 rounded-2xl border-2 border-dashed">
+                  <Image className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="font-display text-xl font-semibold mb-2">No designs yet</h3>
+                  <p className="text-muted-foreground mb-6">
+                    Upload your first design to get started
+                  </p>
+                  <Link to="/upload">
+                    <Button variant="gradient">
+                      <Upload className="h-4 w-4" />
+                      Upload Design
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {designs.map((design) => (
+                    <DesignCard
+                      key={design.id}
+                      design={design}
+                      showActions
+                      onDelete={handleDeleteDesign}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="ai-feedback">
+              {aiFeedbacks.length === 0 ? (
+                <div className="text-center py-16 rounded-2xl border-2 border-dashed">
+                  <Sparkles className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="font-display text-xl font-semibold mb-2">No AI feedback yet</h3>
+                  <p className="text-muted-foreground mb-6">
+                    Request AI analysis on your designs to get insights
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-8">
+                  {aiFeedbacks.map((feedback) => (
+                    <AIFeedbackCard
+                      key={feedback.id}
+                      feedback={feedback}
+                      designTitle={(feedback.designs as any)?.title}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </motion.div>
+      </main>
+    </div>
+  );
+};
+
+export default Dashboard;
