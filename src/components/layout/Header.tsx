@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
-import { Sparkles, Upload, LayoutDashboard, User, LogOut, Menu, X } from 'lucide-react';
+import { Sparkles, Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2 } from 'lucide-react';
 import { useState } from 'react';
 
 export const Header = () => {
@@ -25,6 +25,7 @@ export const Header = () => {
 
   const navItems = [
     { href: '/feed', label: 'Explore', icon: Sparkles },
+    { href: '/ai-assistant', label: 'AI Assistant', icon: Wand2 },
     { href: '/upload', label: 'Upload', icon: Upload },
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   ];
