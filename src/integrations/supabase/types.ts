@@ -52,6 +52,50 @@ export type Database = {
           },
         ]
       }
+      design_feedback: {
+        Row: {
+          color_harmony: number
+          comment: string | null
+          created_at: string
+          creativity: number
+          design_id: string
+          id: string
+          layout_hierarchy: number
+          user_id: string
+          visual_clarity: number
+        }
+        Insert: {
+          color_harmony: number
+          comment?: string | null
+          created_at?: string
+          creativity: number
+          design_id: string
+          id?: string
+          layout_hierarchy: number
+          user_id: string
+          visual_clarity: number
+        }
+        Update: {
+          color_harmony?: number
+          comment?: string | null
+          created_at?: string
+          creativity?: number
+          design_id?: string
+          id?: string
+          layout_hierarchy?: number
+          user_id?: string
+          visual_clarity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "design_feedback_design_id_fkey"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "designs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       designs: {
         Row: {
           category: Database["public"]["Enums"]["design_category"]

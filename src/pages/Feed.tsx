@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Header } from '@/components/layout/Header';
 import { SwipeCard } from '@/components/swipe/SwipeCard';
 import { EmptyFeed } from '@/components/swipe/EmptyFeed';
+import { FeedbackModal } from '@/components/swipe/FeedbackModal';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -31,6 +32,13 @@ interface Design {
   };
 }
 
+interface FeedbackCriteria {
+  id: string;
+  label: string;
+  question: string;
+  value: number;
+}
+
 const categories = [
   { value: 'all', label: 'All' },
   { value: 'ui_ux', label: 'UI/UX' },
@@ -49,6 +57,8 @@ const Feed = () => {
   const [filter, setFilter] = useState('all');
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [guestSwipeCount, setGuestSwipeCount] = useState(0);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [pendingSkipDesign, setPendingSkipDesign] = useState<Design | null>(null);
 
   // Load guest swipe count from localStorage
   useEffect(() => {
@@ -131,7 +141,6 @@ const Feed = () => {
     if (designs.length === 0) return;
 
     const currentDesign = designs[0];
-    const swipeType = direction === 'right' ? 'like' : 'skip';
 
     // Guest user handling
     if (!user) {
@@ -164,24 +173,88 @@ const Feed = () => {
     }
 
     // Authenticated user handling
-    // Optimistically remove from UI
-    setDesigns(prev => prev.slice(1));
+    if (direction === 'left') {
+      // Show feedback modal for skip
+      setPendingSkipDesign(currentDesign);
+      setShowFeedbackModal(true);
+      return;
+    }
 
-    // Record the swipe
+    // Handle right swipe (like)
+    setDesigns(prev => prev.slice(1));
     const { error } = await supabase.from('swipes').insert({
       user_id: user.id,
       design_id: currentDesign.id,
-      type: swipeType,
+      type: 'like',
     });
 
     if (error) {
       console.error('Error recording swipe:', error);
       toast.error('Failed to record swipe');
-      // Restore the card if failed
       setDesigns(prev => [currentDesign, ...prev]);
-    } else if (direction === 'right') {
+    } else {
       toast.success('Liked! 💜');
     }
+  };
+
+  const handleFeedbackSubmit = async (feedback: { criteria: FeedbackCriteria[]; comment: string }) => {
+    if (!pendingSkipDesign || !user) return;
+
+    // Find criteria values
+    const visualClarity = feedback.criteria.find(c => c.id === 'visual_clarity')?.value || 3;
+    const layoutHierarchy = feedback.criteria.find(c => c.id === 'layout_hierarchy')?.value || 3;
+    const colorHarmony = feedback.criteria.find(c => c.id === 'color_harmony')?.value || 3;
+    const creativity = feedback.criteria.find(c => c.id === 'creativity')?.value || 3;
+
+    // Insert feedback
+    const { error: feedbackError } = await supabase.from('design_feedback').insert({
+      design_id: pendingSkipDesign.id,
+      user_id: user.id,
+      visual_clarity: visualClarity,
+      layout_hierarchy: layoutHierarchy,
+      color_harmony: colorHarmony,
+      creativity: creativity,
+      comment: feedback.comment || null,
+    });
+
+    if (feedbackError) {
+      console.error('Error submitting feedback:', feedbackError);
+      toast.error('Failed to submit feedback');
+    } else {
+      toast.success('Thanks for your feedback! 📝');
+    }
+
+    // Record skip swipe
+    await supabase.from('swipes').insert({
+      user_id: user.id,
+      design_id: pendingSkipDesign.id,
+      type: 'skip',
+    });
+
+    // Remove from UI
+    setDesigns(prev => prev.filter(d => d.id !== pendingSkipDesign.id));
+    setShowFeedbackModal(false);
+    setPendingSkipDesign(null);
+  };
+
+  const handleFeedbackClose = async () => {
+    if (!pendingSkipDesign || !user) {
+      setShowFeedbackModal(false);
+      setPendingSkipDesign(null);
+      return;
+    }
+
+    // Record skip without feedback
+    await supabase.from('swipes').insert({
+      user_id: user.id,
+      design_id: pendingSkipDesign.id,
+      type: 'skip',
+    });
+
+    // Remove from UI
+    setDesigns(prev => prev.filter(d => d.id !== pendingSkipDesign.id));
+    setShowFeedbackModal(false);
+    setPendingSkipDesign(null);
   };
 
   const remainingGuestSwipes = GUEST_SWIPE_LIMIT - guestSwipeCount;
@@ -305,6 +378,16 @@ const Feed = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Feedback Modal */}
+      {pendingSkipDesign && (
+        <FeedbackModal
+          open={showFeedbackModal}
+          onClose={handleFeedbackClose}
+          design={pendingSkipDesign}
+          onSubmit={handleFeedbackSubmit}
+        />
+      )}
     </div>
   );
 };
