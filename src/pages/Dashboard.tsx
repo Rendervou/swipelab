@@ -4,11 +4,12 @@ import { Header } from '@/components/layout/Header';
 import { DesignCard } from '@/components/design/DesignCard';
 import { StatCard } from '@/components/stats/StatCard';
 import { AIFeedbackCard } from '@/components/ai/AIFeedbackCard';
+import { FeedbackSummary } from '@/components/dashboard/FeedbackSummary';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Upload, Heart, Eye, Sparkles, Image, Loader2, ArrowRight } from 'lucide-react';
+import { Upload, Heart, Eye, Sparkles, Image, Loader2, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -32,10 +33,23 @@ interface AIFeedback {
   designs?: { title: string };
 }
 
+interface DesignFeedbackSummary {
+  design_id: string;
+  design_title: string;
+  design_image: string;
+  total_reviews: number;
+  avg_visual_clarity: number;
+  avg_layout_hierarchy: number;
+  avg_color_harmony: number;
+  avg_creativity: number;
+  comments: Array<{ comment: string; created_at: string }>;
+}
+
 const Dashboard = () => {
   const { user } = useAuth();
   const [designs, setDesigns] = useState<Design[]>([]);
   const [aiFeedbacks, setAiFeedbacks] = useState<AIFeedback[]>([]);
+  const [feedbackSummaries, setFeedbackSummaries] = useState<DesignFeedbackSummary[]>([]);
   const [stats, setStats] = useState({
     totalDesigns: 0,
     totalLikes: 0,
@@ -94,6 +108,48 @@ const Dashboard = () => {
         weaknesses: Array.isArray(fb.weaknesses) ? fb.weaknesses : [],
       }));
       setAiFeedbacks(formattedFeedbacks as any);
+    }
+
+    // Fetch community feedback for user's designs
+    if (designsData && designsData.length > 0) {
+      const designIds = designsData.map(d => d.id);
+      const { data: feedbackData } = await supabase
+        .from('design_feedback')
+        .select('*')
+        .in('design_id', designIds)
+        .order('created_at', { ascending: false });
+
+      if (feedbackData) {
+        // Aggregate feedback by design
+        const feedbackByDesign = new Map<string, DesignFeedbackSummary>();
+        
+        designsData.forEach(design => {
+          const designFeedback = feedbackData.filter(f => f.design_id === design.id);
+          if (designFeedback.length > 0) {
+            const avgVisualClarity = designFeedback.reduce((sum, f) => sum + f.visual_clarity, 0) / designFeedback.length;
+            const avgLayoutHierarchy = designFeedback.reduce((sum, f) => sum + f.layout_hierarchy, 0) / designFeedback.length;
+            const avgColorHarmony = designFeedback.reduce((sum, f) => sum + f.color_harmony, 0) / designFeedback.length;
+            const avgCreativity = designFeedback.reduce((sum, f) => sum + f.creativity, 0) / designFeedback.length;
+            const comments = designFeedback
+              .filter(f => f.comment)
+              .map(f => ({ comment: f.comment!, created_at: f.created_at }));
+
+            feedbackByDesign.set(design.id, {
+              design_id: design.id,
+              design_title: design.title,
+              design_image: design.image_url,
+              total_reviews: designFeedback.length,
+              avg_visual_clarity: avgVisualClarity,
+              avg_layout_hierarchy: avgLayoutHierarchy,
+              avg_color_harmony: avgColorHarmony,
+              avg_creativity: avgCreativity,
+              comments,
+            });
+          }
+        });
+
+        setFeedbackSummaries(Array.from(feedbackByDesign.values()));
+      }
     }
 
     // Calculate stats
@@ -185,10 +241,14 @@ const Dashboard = () => {
 
           {/* Tabs */}
           <Tabs defaultValue="designs" className="space-y-6">
-            <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsList className="grid w-full max-w-2xl grid-cols-3">
               <TabsTrigger value="designs" className="flex items-center gap-2">
                 <Image className="h-4 w-4" />
                 My Designs
+              </TabsTrigger>
+              <TabsTrigger value="community-feedback" className="flex items-center gap-2">
+                <MessageSquare className="h-4 w-4" />
+                Community Feedback
               </TabsTrigger>
               <TabsTrigger value="ai-feedback" className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
@@ -223,6 +283,10 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
+            </TabsContent>
+
+            <TabsContent value="community-feedback">
+              <FeedbackSummary feedbackData={feedbackSummaries} />
             </TabsContent>
 
             <TabsContent value="ai-feedback">
