@@ -9,14 +9,32 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
-import { Sparkles, Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2 } from 'lucide-react';
-import { useState } from 'react';
+import { Sparkles, Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2, Users, MessageCircle, Bookmark } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 export const Header = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      fetchUnreadCount();
+    }
+  }, [user]);
+
+  const fetchUnreadCount = async () => {
+    if (!user) return;
+    const { count } = await supabase
+      .from('messages')
+      .select('*', { count: 'exact', head: true })
+      .eq('receiver_id', user.id)
+      .eq('read', false);
+    setUnreadMessages(count || 0);
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -25,6 +43,7 @@ export const Header = () => {
 
   const navItems = [
     { href: '/feed', label: 'Explore', icon: Sparkles },
+    { href: '/designers', label: 'Designers', icon: Users },
     { href: '/ai-assistant', label: 'AI Assistant', icon: Wand2 },
     { href: '/upload', label: 'Upload', icon: Upload },
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -81,9 +100,26 @@ export const Header = () => {
                     <p className="text-xs text-muted-foreground">{user.email}</p>
                   </div>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate(`/designer/${user.id}`)}>
+                    <User className="mr-2 h-4 w-4" />
+                    My Profile
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/profile')}>
                     <User className="mr-2 h-4 w-4" />
-                    Profile
+                    Edit Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/messages')}>
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    Messages
+                    {unreadMessages > 0 && (
+                      <span className="ml-auto bg-primary text-primary-foreground text-xs px-1.5 rounded-full">
+                        {unreadMessages}
+                      </span>
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/bookmarks')}>
+                    <Bookmark className="mr-2 h-4 w-4" />
+                    Saved Designs
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                     <LayoutDashboard className="mr-2 h-4 w-4" />
