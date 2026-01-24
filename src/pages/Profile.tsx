@@ -9,15 +9,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Camera, Loader2, Save, X, Plus } from 'lucide-react';
+import { Camera, Loader2, Save, X, Plus, MapPin, DollarSign } from 'lucide-react';
 import { toast } from 'sonner';
 
 const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50),
   bio: z.string().max(300).optional(),
+  location: z.string().max(100).optional(),
+  hourly_rate: z.string().max(20).optional(),
 });
 
 type ProfileForm = z.infer<typeof profileSchema>;
@@ -31,6 +34,7 @@ const Profile = () => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [skills, setSkills] = useState<string[]>([]);
   const [newSkill, setNewSkill] = useState('');
+  const [availableForHire, setAvailableForHire] = useState(false);
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<ProfileForm>({
     resolver: zodResolver(profileSchema),
@@ -54,8 +58,11 @@ const Profile = () => {
     if (data) {
       setValue('name', data.name || '');
       setValue('bio', data.bio || '');
+      setValue('location', data.location || '');
+      setValue('hourly_rate', data.hourly_rate || '');
       setAvatarUrl(data.avatar_url);
       setSkills(data.skills || []);
+      setAvailableForHire(data.available_for_hire || false);
     }
 
     setLoading(false);
@@ -125,7 +132,10 @@ const Profile = () => {
       .update({
         name: data.name,
         bio: data.bio || null,
+        location: data.location || null,
+        hourly_rate: data.hourly_rate || null,
         skills,
+        available_for_hire: availableForHire,
       })
       .eq('id', user.id);
 
@@ -227,6 +237,49 @@ const Profile = () => {
               />
               {errors.bio && (
                 <p className="text-sm text-destructive">{errors.bio.message}</p>
+              )}
+            </div>
+
+            {/* Availability for Hire */}
+            <div className="p-4 rounded-xl bg-secondary/50 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base font-medium">Available for Hire</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Let others know you're open to work
+                  </p>
+                </div>
+                <Switch
+                  checked={availableForHire}
+                  onCheckedChange={setAvailableForHire}
+                />
+              </div>
+
+              {availableForHire && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="location" className="flex items-center gap-1.5">
+                      <MapPin className="h-3.5 w-3.5" />
+                      Location
+                    </Label>
+                    <Input
+                      {...register('location')}
+                      id="location"
+                      placeholder="e.g., Jakarta, Indonesia"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="hourly_rate" className="flex items-center gap-1.5">
+                      <DollarSign className="h-3.5 w-3.5" />
+                      Hourly Rate
+                    </Label>
+                    <Input
+                      {...register('hourly_rate')}
+                      id="hourly_rate"
+                      placeholder="e.g., 50"
+                    />
+                  </div>
+                </div>
               )}
             </div>
 

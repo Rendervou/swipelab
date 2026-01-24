@@ -13,6 +13,10 @@ import Upload from "./pages/Upload";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import AIAssistant from "./pages/AIAssistant";
+import DesignerProfile from "./pages/DesignerProfile";
+import Designers from "./pages/Designers";
+import Messages from "./pages/Messages";
+import Bookmarks from "./pages/Bookmarks";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,9 +33,13 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/feed" element={<Feed />} />
+            <Route path="/designers" element={<Designers />} />
+            <Route path="/designer/:id" element={<DesignerProfile />} />
             <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+            <Route path="/bookmarks" element={<ProtectedRoute><Bookmarks /></ProtectedRoute>} />
             <Route path="/ai-assistant" element={<AIAssistant />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
-import { Heart, Eye, Bookmark } from 'lucide-react';
+import { Heart, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { BookmarkButton } from '@/components/designer/BookmarkButton';
 
 interface Design {
   id: string;
@@ -132,40 +133,36 @@ export const DesignGrid = ({ limit = 12, category }: DesignGridProps) => {
           onMouseEnter={() => setHoveredId(design.id)}
           onMouseLeave={() => setHoveredId(null)}
         >
-          <Link to="/feed" className="block">
-            {/* Image container */}
-            <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
-              <img
-                src={design.image_url}
-                alt={design.title}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                loading="lazy"
-              />
-              
-              {/* Overlay on hover */}
-              <motion.div
-                initial={false}
-                animate={{ opacity: hoveredId === design.id ? 1 : 0 }}
-                className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end justify-between p-4"
-              >
-                <h3 className="text-white font-medium text-sm truncate flex-1 mr-2">
-                  {design.title}
-                </h3>
-                <div className="flex items-center gap-2">
-                  <button className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors backdrop-blur-sm">
-                    <Bookmark className="h-4 w-4 text-white" />
-                  </button>
-                  <button className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors backdrop-blur-sm">
-                    <Heart className="h-4 w-4 text-white" />
-                  </button>
-                </div>
-              </motion.div>
-            </div>
-          </Link>
+          {/* Image container */}
+          <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+            <img
+              src={design.image_url}
+              alt={design.title}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+            />
+            
+            {/* Overlay on hover */}
+            <motion.div
+              initial={false}
+              animate={{ opacity: hoveredId === design.id ? 1 : 0 }}
+              className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end justify-between p-4"
+            >
+              <h3 className="text-white font-medium text-sm truncate flex-1 mr-2">
+                {design.title}
+              </h3>
+              <div className="flex items-center gap-2">
+                <BookmarkButton 
+                  designId={design.id}
+                  className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors backdrop-blur-sm text-white"
+                />
+              </div>
+            </motion.div>
+          </div>
 
           {/* Designer info */}
           <div className="mt-3 flex items-center justify-between">
-            <div className="flex items-center gap-2 min-w-0">
+            <Link to={`/designer/${design.user_id}`} className="flex items-center gap-2 min-w-0 hover:opacity-80">
               <Avatar className="h-7 w-7">
                 <AvatarImage src={design.profiles?.avatar_url || undefined} />
                 <AvatarFallback className="text-xs bg-secondary">
@@ -175,7 +172,7 @@ export const DesignGrid = ({ limit = 12, category }: DesignGridProps) => {
               <span className="text-sm text-muted-foreground truncate">
                 {design.profiles?.name || 'Designer'}
               </span>
-            </div>
+            </Link>
             <div className="flex items-center gap-3 text-xs text-muted-foreground shrink-0">
               <span className="flex items-center gap-1">
                 <Heart className="h-3.5 w-3.5" />
@@ -188,6 +185,7 @@ export const DesignGrid = ({ limit = 12, category }: DesignGridProps) => {
             </div>
           </div>
         </motion.div>
+
       ))}
     </div>
   );

@@ -52,6 +52,42 @@ export type Database = {
           },
         ]
       }
+      bookmarks: {
+        Row: {
+          created_at: string
+          design_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          design_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          design_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookmarks_design_id_fkey"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "designs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookmarks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       design_feedback: {
         Row: {
           color_harmony: number
@@ -126,30 +162,181 @@ export type Database = {
         }
         Relationships: []
       }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "follows_following_id_fkey"
+            columns: ["following_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hire_requests: {
+        Row: {
+          budget: string | null
+          client_id: string
+          created_at: string
+          designer_id: string
+          id: string
+          project_description: string
+          project_title: string
+          status: string
+          timeline: string | null
+          updated_at: string
+        }
+        Insert: {
+          budget?: string | null
+          client_id: string
+          created_at?: string
+          designer_id: string
+          id?: string
+          project_description: string
+          project_title: string
+          status?: string
+          timeline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          budget?: string | null
+          client_id?: string
+          created_at?: string
+          designer_id?: string
+          id?: string
+          project_description?: string
+          project_title?: string
+          status?: string
+          timeline?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hire_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hire_requests_designer_id_fkey"
+            columns: ["designer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          hire_request_id: string | null
+          id: string
+          read: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          hire_request_id?: string | null
+          id?: string
+          read?: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          hire_request_id?: string | null
+          id?: string
+          read?: boolean | null
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_hire_request_id_fkey"
+            columns: ["hire_request_id"]
+            isOneToOne: false
+            referencedRelation: "hire_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_receiver_id_fkey"
+            columns: ["receiver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
+          available_for_hire: boolean | null
           avatar_url: string | null
           bio: string | null
           created_at: string
+          hourly_rate: string | null
           id: string
+          location: string | null
           name: string | null
           skills: string[] | null
           updated_at: string
         }
         Insert: {
+          available_for_hire?: boolean | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          hourly_rate?: string | null
           id: string
+          location?: string | null
           name?: string | null
           skills?: string[] | null
           updated_at?: string
         }
         Update: {
+          available_for_hire?: boolean | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          hourly_rate?: string | null
           id?: string
+          location?: string | null
           name?: string | null
           skills?: string[] | null
           updated_at?: string
