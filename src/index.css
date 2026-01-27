@@ -219,7 +219,11 @@
 
   /* Glass morphism effect */
   .glass {
-    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+    @apply bg-background/80 backdrop-blur-xl border border-border/50;
+  }
+
+  .dark .glass {
+    @apply bg-background/90 backdrop-blur-xl border border-border/30;
   }
 
   /* Button glow effect */

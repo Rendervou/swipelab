@@ -57,7 +57,7 @@ export const DesignCard = ({ design, showActions, onDelete, onRequestAI }: Desig
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: isHovered ? 1 : 0 }}
-          className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-transparent"
+          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
         />
       </div>
 
