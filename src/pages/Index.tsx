@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Sparkles, ArrowRight, Filter, ChevronDown } from 'lucide-react';
+import { ArrowRight, Filter, ChevronDown } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { useAuth } from '@/contexts/AuthContext';
 import { DesignGrid } from '@/components/design/DesignGrid';
@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import swipelabLogo from '@/assets/swipelab-logo.png';
 
 const categories = [
   { value: 'all', label: 'Discover' },
@@ -166,7 +167,7 @@ const Index = () => {
               <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-primary-foreground/10 blur-3xl" />
               
               <div className="relative">
-                <Sparkles className="mx-auto h-10 w-10 text-primary-foreground/80 mb-4" />
+                <img src={swipelabLogo} alt="SwipeLab" className="mx-auto h-12 mb-4 brightness-0 invert" />
                 <h2 className="font-display text-2xl font-bold text-primary-foreground md:text-4xl">
                   Ready to share your work?
                 </h2>
@@ -203,10 +204,7 @@ const Index = () => {
       <footer className="border-t py-10">
         <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <span className="font-display font-semibold">SwipeLab</span>
+            <img src={swipelabLogo} alt="SwipeLab" className="h-8" />
           </div>
           <p className="text-sm text-muted-foreground">
             © 2024 SwipeLab. Made with ❤️ for designers.

@@ -9,9 +9,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
-import { Sparkles, Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2, Users, MessageCircle, Bookmark } from 'lucide-react';
+import { Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2, Users, MessageCircle, Bookmark, Compass } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import swipelabLogo from '@/assets/swipelab-logo.png';
 
 export const Header = () => {
   const { user, signOut } = useAuth();
@@ -42,7 +43,7 @@ export const Header = () => {
   };
 
   const navItems = [
-    { href: '/feed', label: 'Explore', icon: Sparkles },
+    { href: '/feed', label: 'Explore', icon: Compass },
     { href: '/designers', label: 'Designers', icon: Users },
     { href: '/ai-assistant', label: 'AI Assistant', icon: Wand2 },
     { href: '/upload', label: 'Upload', icon: Upload },
@@ -56,10 +57,7 @@ export const Header = () => {
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <span className="font-display text-xl font-bold">SwipeLab</span>
+          <img src={swipelabLogo} alt="SwipeLab" className="h-10 md:h-12" />
         </Link>
 
         {/* Desktop Navigation */}
