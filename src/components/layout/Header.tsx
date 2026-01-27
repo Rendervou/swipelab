@@ -13,6 +13,7 @@ import { Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2, Users, MessageCi
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import swipelabLogo from '@/assets/swipelab-logo.png';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export const Header = () => {
   const { user, signOut } = useAuth();
@@ -78,7 +79,8 @@ export const Header = () => {
         )}
 
         {/* Right side */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           {user ? (
             <>
               <DropdownMenu>
