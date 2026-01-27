@@ -167,18 +167,18 @@ const Index = () => {
               <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-primary-foreground/10 blur-3xl" />
               
               <div className="relative">
-                <img src={swipelabLogo} alt="SwipeLab" className="mx-auto h-12 mb-4 brightness-0 invert" />
-                <h2 className="font-display text-2xl font-bold text-primary-foreground md:text-4xl">
+                <img src={swipelabLogo} alt="SwipeLab" className="mx-auto h-12 mb-4 brightness-0 invert opacity-90" />
+                <h2 className="font-display text-2xl font-bold text-white md:text-4xl">
                   Ready to share your work?
                 </h2>
-                <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">
+                <p className="mx-auto mt-3 max-w-xl text-white/80">
                   Join thousands of designers getting real feedback every day.
                 </p>
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
                   <Link to="/register">
                     <Button 
                       size="lg" 
-                      className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                      className="bg-white text-foreground hover:bg-white/90"
                     >
                       Create Free Account
                       <ArrowRight className="h-4 w-4" />
@@ -188,7 +188,7 @@ const Index = () => {
                     <Button 
                       variant="outline" 
                       size="lg"
-                      className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+                      className="border-white/30 text-white hover:bg-white/10"
                     >
                       Sign In
                     </Button>
@@ -204,7 +204,7 @@ const Index = () => {
       <footer className="border-t py-10">
         <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex items-center gap-2">
-            <img src={swipelabLogo} alt="SwipeLab" className="h-8" />
+            <img src={swipelabLogo} alt="SwipeLab" className="h-8 dark:brightness-110" />
           </div>
           <p className="text-sm text-muted-foreground">
             © 2024 SwipeLab. Made with ❤️ for designers.

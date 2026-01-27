@@ -73,7 +73,7 @@ export const SwipeCard = ({ design, onSwipe, isTop }: SwipeCardProps) => {
             alt={design.title}
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         </div>
       </motion.div>
     );
@@ -107,7 +107,7 @@ export const SwipeCard = ({ design, onSwipe, isTop }: SwipeCardProps) => {
         />
         
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/90 via-foreground/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
         
         {/* Like indicator */}
         <motion.div
@@ -133,11 +133,11 @@ export const SwipeCard = ({ design, onSwipe, isTop }: SwipeCardProps) => {
         </div>
         
         {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 text-primary-foreground">
+        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
           <div className="flex items-center gap-3 mb-3">
-            <Avatar className="h-10 w-10 border-2 border-primary-foreground/30">
+            <Avatar className="h-10 w-10 border-2 border-white/30">
               <AvatarImage src={design.profiles?.avatar_url || undefined} />
-              <AvatarFallback className="bg-primary/50 text-primary-foreground text-sm">
+              <AvatarFallback className="bg-primary/50 text-white text-sm">
                 {design.profiles?.name?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
@@ -147,7 +147,7 @@ export const SwipeCard = ({ design, onSwipe, isTop }: SwipeCardProps) => {
           <h3 className="font-display text-2xl font-bold mb-2">{design.title}</h3>
           
           {design.description && (
-            <p className="text-primary-foreground/80 text-sm line-clamp-2">
+            <p className="text-white/80 text-sm line-clamp-2">
               {design.description}
             </p>
           )}
@@ -171,7 +171,7 @@ export const SwipeCard = ({ design, onSwipe, isTop }: SwipeCardProps) => {
           onClick={() => handleButtonSwipe('right')}
           className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-primary shadow-glow"
         >
-          <Heart className="h-9 w-9 text-primary-foreground" fill="currentColor" />
+          <Heart className="h-9 w-9 text-white" fill="currentColor" />
         </motion.button>
         
         <motion.button
