@@ -95,7 +95,9 @@ const Feed = () => {
     const { data: allDesigns, error: designsError } = await query;
 
     if (designsError) {
-      console.error('Error fetching designs:', designsError);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching designs:', designsError);
+      }
       setLoading(false);
       return;
     }
@@ -189,7 +191,9 @@ const Feed = () => {
     });
 
     if (error) {
-      console.error('Error recording swipe:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error recording swipe:', error);
+      }
       toast.error('Failed to record swipe');
       setDesigns(prev => [currentDesign, ...prev]);
     } else {
@@ -218,7 +222,9 @@ const Feed = () => {
     });
 
     if (feedbackError) {
-      console.error('Error submitting feedback:', feedbackError);
+      if (import.meta.env.DEV) {
+        console.error('Error submitting feedback:', feedbackError);
+      }
       toast.error('Failed to submit feedback');
     } else {
       toast.success('Thanks for your feedback! 📝');

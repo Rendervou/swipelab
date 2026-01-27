@@ -103,7 +103,9 @@ const Profile = () => {
       setAvatarUrl(urlWithTimestamp);
       toast.success('Avatar updated!');
     } catch (error: any) {
-      console.error('Avatar upload error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Avatar upload error:', error);
+      }
       toast.error('Failed to upload avatar');
     } finally {
       setUploading(false);

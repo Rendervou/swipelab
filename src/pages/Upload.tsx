@@ -98,7 +98,9 @@ const Upload = () => {
       toast.success('Design uploaded successfully!');
       navigate('/dashboard');
     } catch (error: any) {
-      console.error('Upload error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Upload error:', error);
+      }
       toast.error(error.message || 'Failed to upload design');
     } finally {
       setLoading(false);
