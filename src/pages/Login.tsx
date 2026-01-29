@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
-import { Sparkles, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import swipelabLogo from '@/assets/swipelab-logo.png';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email'),
@@ -50,10 +51,12 @@ const Login = () => {
           className="w-full max-w-md"
         >
           <Link to="/" className="inline-flex items-center gap-2 mb-8">
-            <div className="h-10 w-10 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
-              <Sparkles className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="font-display text-2xl font-bold">SwipeLab</span>
+            <img 
+              src={swipelabLogo} 
+              alt="SwipeLab" 
+              className="h-10 dark:brightness-110 dark:contrast-110" 
+            />
+            <span className="font-display text-2xl font-bold text-gradient-primary">SwipeLab</span>
           </Link>
 
           <h1 className="font-display text-3xl font-bold mb-2">Welcome back</h1>
@@ -132,8 +135,13 @@ const Login = () => {
           transition={{ delay: 0.2 }}
           className="relative text-center p-12"
         >
-          <div className="mb-8 mx-auto h-24 w-24 rounded-3xl bg-gradient-primary flex items-center justify-center shadow-glow animate-float">
-            <Sparkles className="h-12 w-12 text-primary-foreground" />
+          <div className="mb-8 mx-auto flex items-center justify-center gap-3 animate-float">
+            <img 
+              src={swipelabLogo} 
+              alt="SwipeLab" 
+              className="h-20 brightness-0 invert opacity-90" 
+            />
+            <span className="font-display text-3xl font-bold text-white">SwipeLab</span>
           </div>
           <h2 className="font-display text-3xl font-bold mb-4">
             Swipe, Rate, Create
