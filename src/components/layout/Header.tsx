@@ -61,8 +61,11 @@ export const Header = () => {
           <img 
             src={swipelabLogo} 
             alt="SwipeLab" 
-            className="h-10 md:h-12 dark:brightness-110 dark:contrast-110" 
+            className="h-8 md:h-10 dark:brightness-110 dark:contrast-110" 
           />
+          <span className="font-display text-xl md:text-2xl font-bold text-gradient-primary">
+            SwipeLab
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
