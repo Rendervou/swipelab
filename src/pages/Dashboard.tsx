@@ -209,9 +209,11 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="font-display text-3xl font-bold mb-2">Dashboard</h1>
-          <p className="text-muted-foreground mb-8">
-            Track your designs and feedback
+          <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
+            Swipe ideas. Discover talent. <span className="text-gradient-primary">Powered by AI.</span>
+          </h1>
+          <p className="text-muted-foreground mb-8 max-w-xl">
+            Kelola desain Anda, lihat feedback dari komunitas, dan dapatkan insight AI untuk meningkatkan karya Anda.
           </p>
 
           {/* Stats */}
