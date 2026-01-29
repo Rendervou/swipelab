@@ -13,8 +13,9 @@ import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Camera, Loader2, Save, X, Plus, MapPin, DollarSign } from 'lucide-react';
+import { Camera, Loader2, Save, X, Plus, MapPin, DollarSign, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import swipelabLogo from '@/assets/swipelab-logo.png';
 
 const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50),
@@ -171,10 +172,21 @@ const Profile = () => {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-2xl mx-auto"
         >
-          <h1 className="font-display text-3xl font-bold mb-2">Profile</h1>
-          <p className="text-muted-foreground mb-8">
-            Customize how others see you
-          </p>
+          <div className="flex items-center gap-3 mb-6">
+            <img 
+              src={swipelabLogo} 
+              alt="SwipeLab" 
+              className="h-8 dark:brightness-110 dark:contrast-110" 
+            />
+            <div>
+              <h1 className="font-display text-3xl font-bold">
+                Profil <span className="text-gradient-primary">Kamu</span>
+              </h1>
+              <p className="text-muted-foreground">
+                Tampilkan dirimu ke komunitas SwipeLab
+              </p>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Avatar */}
