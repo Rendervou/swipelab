@@ -8,8 +8,9 @@ import { FeedbackModal } from '@/components/swipe/FeedbackModal';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Filter, LogIn } from 'lucide-react';
+import { Loader2, Filter, LogIn, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import swipelabLogo from '@/assets/swipelab-logo.png';
 import {
   Dialog,
   DialogContent,
@@ -364,18 +365,30 @@ const Feed = () => {
 
       {/* Login Dialog */}
       <Dialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>🎉 Kamu suka design-design ini!</DialogTitle>
-            <DialogDescription>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="text-center sm:text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <img 
+                src={swipelabLogo} 
+                alt="SwipeLab" 
+                className="h-12 dark:brightness-110 dark:contrast-110" 
+              />
+              <span className="font-display text-2xl font-bold text-gradient-primary">SwipeLab</span>
+            </div>
+            <DialogTitle className="text-xl">🎉 Kamu suka design-design ini!</DialogTitle>
+            <DialogDescription className="pt-2">
               Kamu sudah swipe {GUEST_SWIPE_LIMIT} design. Untuk melanjutkan melihat dan menyimpan design favoritmu, silakan login atau buat akun gratis.
             </DialogDescription>
           </DialogHeader>
+          <div className="flex items-center justify-center gap-2 py-4">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <span className="text-sm text-muted-foreground">Swipe tanpa batas & simpan favoritmu!</span>
+          </div>
           <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button variant="outline" onClick={() => setShowLoginDialog(false)}>
               Nanti saja
             </Button>
-            <Button onClick={() => navigate('/register')}>
+            <Button variant="gradient" onClick={() => navigate('/register')}>
               Daftar Gratis
             </Button>
             <Button variant="secondary" onClick={() => navigate('/login')}>
