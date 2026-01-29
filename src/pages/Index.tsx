@@ -167,7 +167,10 @@ const Index = () => {
               <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-primary-foreground/10 blur-3xl" />
               
               <div className="relative">
-                <img src={swipelabLogo} alt="SwipeLab" className="mx-auto h-12 mb-4 brightness-0 invert opacity-90" />
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <img src={swipelabLogo} alt="SwipeLab" className="h-10 brightness-0 invert opacity-90" />
+                  <span className="font-display text-2xl font-bold text-white">SwipeLab</span>
+                </div>
                 <h2 className="font-display text-2xl font-bold text-white md:text-4xl">
                   Ready to share your work?
                 </h2>
@@ -204,7 +207,8 @@ const Index = () => {
       <footer className="border-t py-10">
         <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex items-center gap-2">
-            <img src={swipelabLogo} alt="SwipeLab" className="h-8 dark:brightness-110" />
+            <img src={swipelabLogo} alt="SwipeLab" className="h-8 dark:brightness-110 dark:contrast-110" />
+            <span className="font-display text-lg font-bold text-gradient-primary">SwipeLab</span>
           </div>
           <p className="text-sm text-muted-foreground">
             © 2024 SwipeLab. Made with ❤️ for designers.
