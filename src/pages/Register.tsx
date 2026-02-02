@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/language/LanguageSelector';
 import { Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import swipelabLogo from '@/assets/swipelab-logo.png';
@@ -26,6 +28,7 @@ type RegisterForm = z.infer<typeof registerSchema>;
 
 const Register = () => {
   const { signUp } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -77,7 +80,12 @@ const Register = () => {
       </div>
 
       {/* Right side - Form */}
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="flex-1 flex items-center justify-center p-8 relative">
+        {/* Language Selector - Top Right */}
+        <div className="absolute top-4 right-4">
+          <LanguageSelector variant="default" />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -92,18 +100,21 @@ const Register = () => {
             <span className="font-display text-2xl font-bold text-gradient-primary">SwipeLab</span>
           </Link>
 
-          <h1 className="font-display text-3xl font-bold mb-2">Create your account</h1>
-          <p className="text-muted-foreground mb-8">Start getting feedback on your designs</p>
+          <h1 className="font-display text-3xl font-bold mb-2">{t('auth.createAccount')}</h1>
+          <p className="text-muted-foreground mb-6">{t('auth.startFeedback')}</p>
+
+          {/* Full Language Selector */}
+          <LanguageSelector variant="full" className="mb-6" />
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">{t('auth.name')}</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                   {...register('name')}
                   id="name"
-                  placeholder="Your name"
+                  placeholder={t('auth.namePlaceholder')}
                   className="pl-10 h-12"
                 />
               </div>
@@ -113,14 +124,14 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('auth.email')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                   {...register('email')}
                   id="email"
                   type="email"
-                  placeholder="hello@example.com"
+                  placeholder={t('auth.emailPlaceholder')}
                   className="pl-10 h-12"
                 />
               </div>
@@ -130,14 +141,14 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('auth.password')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                   {...register('password')}
                   id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={t('auth.passwordPlaceholder')}
                   className="pl-10 h-12"
                 />
               </div>
@@ -147,14 +158,14 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                   {...register('confirmPassword')}
                   id="confirmPassword"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={t('auth.passwordPlaceholder')}
                   className="pl-10 h-12"
                 />
               </div>
@@ -174,7 +185,7 @@ const Register = () => {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Create Account
+                  {t('auth.signUp')}
                   <ArrowRight className="h-5 w-5" />
                 </>
               )}
@@ -182,9 +193,9 @@ const Register = () => {
           </form>
 
           <p className="mt-8 text-center text-sm text-muted-foreground">
-            Already have an account?{' '}
+            {t('auth.hasAccount')}{' '}
             <Link to="/login" className="text-primary font-medium hover:underline">
-              Sign in
+              {t('auth.signIn')}
             </Link>
           </p>
         </motion.div>
