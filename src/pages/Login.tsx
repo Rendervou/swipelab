@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/language/LanguageSelector';
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import swipelabLogo from '@/assets/swipelab-logo.png';
@@ -21,6 +23,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 const Login = () => {
   const { signIn } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +47,12 @@ const Login = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left side - Form */}
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="flex-1 flex items-center justify-center p-8 relative">
+        {/* Language Selector - Top Right */}
+        <div className="absolute top-4 right-4">
+          <LanguageSelector variant="default" />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -59,19 +67,22 @@ const Login = () => {
             <span className="font-display text-2xl font-bold text-gradient-primary">SwipeLab</span>
           </Link>
 
-          <h1 className="font-display text-3xl font-bold mb-2">Welcome back</h1>
-          <p className="text-muted-foreground mb-8">Sign in to continue your design journey</p>
+          <h1 className="font-display text-3xl font-bold mb-2">{t('auth.welcomeBack')}</h1>
+          <p className="text-muted-foreground mb-6">{t('auth.signInContinue')}</p>
+
+          {/* Full Language Selector */}
+          <LanguageSelector variant="full" className="mb-6" />
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('auth.email')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                   {...register('email')}
                   id="email"
                   type="email"
-                  placeholder="hello@example.com"
+                  placeholder={t('auth.emailPlaceholder')}
                   className="pl-10 h-12"
                 />
               </div>
@@ -81,14 +92,14 @@ const Login = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('auth.password')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                   {...register('password')}
                   id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={t('auth.passwordPlaceholder')}
                   className="pl-10 h-12"
                 />
               </div>
@@ -108,7 +119,7 @@ const Login = () => {
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Sign In
+                  {t('auth.signIn')}
                   <ArrowRight className="h-5 w-5" />
                 </>
               )}
@@ -116,9 +127,9 @@ const Login = () => {
           </form>
 
           <p className="mt-8 text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
+            {t('auth.noAccount')}{' '}
             <Link to="/register" className="text-primary font-medium hover:underline">
-              Sign up free
+              {t('auth.signUpFree')}
             </Link>
           </p>
         </motion.div>

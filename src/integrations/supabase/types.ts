@@ -132,6 +132,95 @@ export type Database = {
           },
         ]
       }
+      designer_services: {
+        Row: {
+          basic_delivery_days: number | null
+          basic_description: string | null
+          basic_price: number | null
+          basic_revisions: number | null
+          category: Database["public"]["Enums"]["service_category"]
+          created_at: string
+          description: string
+          designer_id: string
+          faq: Json | null
+          id: string
+          is_active: boolean | null
+          orders_count: number | null
+          portfolio_images: string[] | null
+          premium_delivery_days: number | null
+          premium_description: string | null
+          premium_price: number | null
+          premium_revisions: number | null
+          standard_delivery_days: number | null
+          standard_description: string | null
+          standard_price: number | null
+          standard_revisions: number | null
+          title: string
+          updated_at: string
+          views_count: number | null
+        }
+        Insert: {
+          basic_delivery_days?: number | null
+          basic_description?: string | null
+          basic_price?: number | null
+          basic_revisions?: number | null
+          category: Database["public"]["Enums"]["service_category"]
+          created_at?: string
+          description: string
+          designer_id: string
+          faq?: Json | null
+          id?: string
+          is_active?: boolean | null
+          orders_count?: number | null
+          portfolio_images?: string[] | null
+          premium_delivery_days?: number | null
+          premium_description?: string | null
+          premium_price?: number | null
+          premium_revisions?: number | null
+          standard_delivery_days?: number | null
+          standard_description?: string | null
+          standard_price?: number | null
+          standard_revisions?: number | null
+          title: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Update: {
+          basic_delivery_days?: number | null
+          basic_description?: string | null
+          basic_price?: number | null
+          basic_revisions?: number | null
+          category?: Database["public"]["Enums"]["service_category"]
+          created_at?: string
+          description?: string
+          designer_id?: string
+          faq?: Json | null
+          id?: string
+          is_active?: boolean | null
+          orders_count?: number | null
+          portfolio_images?: string[] | null
+          premium_delivery_days?: number | null
+          premium_description?: string | null
+          premium_price?: number | null
+          premium_revisions?: number | null
+          standard_delivery_days?: number | null
+          standard_description?: string | null
+          standard_price?: number | null
+          standard_revisions?: number | null
+          title?: string
+          updated_at?: string
+          views_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "designer_services_designer_id_fkey"
+            columns: ["designer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       designs: {
         Row: {
           category: Database["public"]["Enums"]["design_category"]
@@ -343,6 +432,48 @@ export type Database = {
         }
         Relationships: []
       }
+      service_testimonials: {
+        Row: {
+          client_id: string
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          service_id: string
+        }
+        Insert: {
+          client_id: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          service_id: string
+        }
+        Update: {
+          client_id?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          service_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_testimonials_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_testimonials_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "designer_services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       swipes: {
         Row: {
           created_at: string
@@ -409,6 +540,15 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
       design_category: "ui_ux" | "poster" | "illustration"
+      service_category:
+        | "ui_ux_design"
+        | "graphic_design"
+        | "illustration"
+        | "branding"
+        | "web_design"
+        | "mobile_design"
+        | "motion_graphics"
+        | "other"
       swipe_type: "like" | "skip"
     }
     CompositeTypes: {
@@ -539,6 +679,16 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       design_category: ["ui_ux", "poster", "illustration"],
+      service_category: [
+        "ui_ux_design",
+        "graphic_design",
+        "illustration",
+        "branding",
+        "web_design",
+        "mobile_design",
+        "motion_graphics",
+        "other",
+      ],
       swipe_type: ["like", "skip"],
     },
   },

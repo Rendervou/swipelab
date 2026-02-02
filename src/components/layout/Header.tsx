@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
-import { Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2, Users, MessageCircle, Bookmark, Compass } from 'lucide-react';
+import { Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2, Users, MessageCircle, Bookmark, Compass, ShoppingBag } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import swipelabLogo from '@/assets/swipelab-logo.png';
@@ -46,6 +46,7 @@ export const Header = () => {
   const navItems = [
     { href: '/feed', label: 'Explore', icon: Compass },
     { href: '/designers', label: 'Designers', icon: Users },
+    { href: '/services', label: 'Services', icon: ShoppingBag },
     { href: '/ai-assistant', label: 'AI Assistant', icon: Wand2 },
     { href: '/upload', label: 'Upload', icon: Upload },
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
