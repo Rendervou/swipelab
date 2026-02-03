@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Filter, ChevronDown } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { DesignGrid } from '@/components/design/DesignGrid';
 import {
   DropdownMenu,
@@ -14,22 +15,23 @@ import {
 } from '@/components/ui/dropdown-menu';
 import swipelabLogo from '@/assets/swipelab-logo.png';
 
-const categories = [
-  { value: 'all', label: 'Discover' },
-  { value: 'ui_ux', label: 'UI/UX' },
-  { value: 'poster', label: 'Poster' },
-  { value: 'illustration', label: 'Illustration' },
-];
-
-const navCategories = [
-  'Animation', 'Branding', 'Illustration', 'Mobile', 'Print', 
-  'Product Design', 'Typography', 'Web Design'
-];
-
 const Index = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState('all');
   const [sortBy, setSortBy] = useState('Popular');
+
+  const categories = [
+    { value: 'all', label: t('common.explore') },
+    { value: 'ui_ux', label: 'UI/UX' },
+    { value: 'poster', label: 'Poster' },
+    { value: 'illustration', label: t('category.illustration') },
+  ];
+
+  const navCategories = [
+    'Animation', 'Branding', 'Illustration', 'Mobile', 'Print', 
+    'Product Design', 'Typography', 'Web Design'
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,12 +46,11 @@ const Index = () => {
             className="text-center"
           >
             <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
-              Explore the world's leading{' '}
+              {t('hero.explorePortfolio').split('design portfolio')[0]}
               <span className="text-gradient-primary">design portfolio</span>
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground md:text-lg">
-              Millions of designers and agencies showcase their portfolio work on SwipeLab — 
-              the home to the world's best design and creative professionals.
+              {t('hero.exploreDesc')}
             </p>
             
             {!user && (
@@ -61,7 +62,7 @@ const Index = () => {
               >
                 <Link to="/register">
                   <Button variant="gradient" size="lg">
-                    Get Started — it's free
+                    {t('common.getStarted')} — it's free
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
@@ -130,7 +131,7 @@ const Index = () => {
             {/* Filters button */}
             <Button variant="outline" className="ml-auto shrink-0 gap-2">
               <Filter className="h-4 w-4" />
-              Filters
+              {t('common.filter')}
             </Button>
           </div>
         </div>
@@ -145,7 +146,7 @@ const Index = () => {
           <div className="mt-12 text-center">
             <Link to="/feed">
               <Button variant="outline" size="lg" className="gap-2">
-                Explore more designs
+                {t('common.explore')} more designs
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
@@ -172,10 +173,10 @@ const Index = () => {
                   <span className="font-display text-2xl font-bold text-white">SwipeLab</span>
                 </div>
                 <h2 className="font-display text-2xl font-bold text-white md:text-4xl">
-                  Ready to share your work?
+                  {t('hero.shareWork')}
                 </h2>
                 <p className="mx-auto mt-3 max-w-xl text-white/80">
-                  Join thousands of designers getting real feedback every day.
+                  {t('hero.shareWorkDesc')}
                 </p>
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
                   <Link to="/register">
@@ -183,7 +184,7 @@ const Index = () => {
                       size="lg" 
                       className="bg-white text-foreground hover:bg-white/90"
                     >
-                      Create Free Account
+                      {t('hero.createFreeAccount')}
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
@@ -193,7 +194,7 @@ const Index = () => {
                       size="lg"
                       className="border-white/30 text-white hover:bg-white/10"
                     >
-                      Sign In
+                      {t('auth.signIn')}
                     </Button>
                   </Link>
                 </div>

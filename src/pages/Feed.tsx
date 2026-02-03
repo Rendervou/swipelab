@@ -7,6 +7,7 @@ import { EmptyFeed } from '@/components/swipe/EmptyFeed';
 import { FeedbackModal } from '@/components/swipe/FeedbackModal';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Filter, LogIn, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
@@ -40,18 +41,12 @@ interface FeedbackCriteria {
   value: number;
 }
 
-const categories = [
-  { value: 'all', label: 'All' },
-  { value: 'ui_ux', label: 'UI/UX' },
-  { value: 'poster', label: 'Poster' },
-  { value: 'illustration', label: 'Illustration' },
-];
-
 const GUEST_SWIPE_LIMIT = 5;
 const GUEST_SWIPE_KEY = 'guest_swipe_count';
 
 const Feed = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [designs, setDesigns] = useState<Design[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,6 +55,13 @@ const Feed = () => {
   const [guestSwipeCount, setGuestSwipeCount] = useState(0);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [pendingSkipDesign, setPendingSkipDesign] = useState<Design | null>(null);
+
+  const categories = [
+    { value: 'all', label: t('common.all') },
+    { value: 'ui_ux', label: 'UI/UX' },
+    { value: 'poster', label: 'Poster' },
+    { value: 'illustration', label: t('category.illustration') },
+  ];
 
   // Load guest swipe count from localStorage
   useEffect(() => {
@@ -281,18 +283,18 @@ const Feed = () => {
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
                 <p className="font-medium text-foreground">
-                  👋 Kamu sedang melihat sebagai tamu
+                  👋 {t('feed.guestViewing')}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {remainingGuestSwipes > 0 
-                    ? `Sisa ${remainingGuestSwipes} swipe gratis. Login untuk swipe tanpa batas!`
-                    : 'Kamu sudah mencapai batas swipe. Login untuk melanjutkan!'
+                    ? t('feed.guestSwipes').replace('{count}', String(remainingGuestSwipes))
+                    : t('feed.limitReached')
                   }
                 </p>
               </div>
               <Button onClick={() => navigate('/login')} size="sm">
                 <LogIn className="h-4 w-4 mr-2" />
-                Login
+                {t('nav.login')}
               </Button>
             </div>
           </motion.div>
@@ -321,7 +323,7 @@ const Feed = () => {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
               <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-              <p className="text-muted-foreground">Loading designs...</p>
+              <p className="text-muted-foreground">{t('common.loading')}</p>
             </div>
           ) : designs.length === 0 ? (
             <EmptyFeed 
@@ -358,7 +360,7 @@ const Feed = () => {
             animate={{ opacity: 1 }}
             className="text-center mt-24 text-sm text-muted-foreground"
           >
-            {designs.length} design{designs.length !== 1 ? 's' : ''} left to explore
+            {t('feed.designsLeft').replace('{count}', String(designs.length))}
           </motion.p>
         )}
       </main>
@@ -375,24 +377,24 @@ const Feed = () => {
               />
               <span className="font-display text-2xl font-bold text-gradient-primary">SwipeLab</span>
             </div>
-            <DialogTitle className="text-xl">🎉 Kamu suka design-design ini!</DialogTitle>
+            <DialogTitle className="text-xl">🎉 {t('feed.youLikeDesigns')}</DialogTitle>
             <DialogDescription className="pt-2">
-              Kamu sudah swipe {GUEST_SWIPE_LIMIT} design. Untuk melanjutkan melihat dan menyimpan design favoritmu, silakan login atau buat akun gratis.
+              {t('feed.swipedLimit').replace('{count}', String(GUEST_SWIPE_LIMIT))}
             </DialogDescription>
           </DialogHeader>
           <div className="flex items-center justify-center gap-2 py-4">
             <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-sm text-muted-foreground">Swipe tanpa batas & simpan favoritmu!</span>
+            <span className="text-sm text-muted-foreground">{t('feed.unlimitedSwipes')}</span>
           </div>
           <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button variant="outline" onClick={() => setShowLoginDialog(false)}>
-              Nanti saja
+              {t('feed.maybeLater')}
             </Button>
             <Button variant="gradient" onClick={() => navigate('/register')}>
-              Daftar Gratis
+              {t('feed.registerFree')}
             </Button>
             <Button variant="secondary" onClick={() => navigate('/login')}>
-              Login
+              {t('nav.login')}
             </Button>
           </DialogFooter>
         </DialogContent>

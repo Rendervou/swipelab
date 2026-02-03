@@ -9,14 +9,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2, Users, MessageCircle, Bookmark, Compass, ShoppingBag } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import swipelabLogo from '@/assets/swipelab-logo.png';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { LanguageSelector } from '@/components/language/LanguageSelector';
 
 export const Header = () => {
   const { user, signOut } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -44,12 +47,12 @@ export const Header = () => {
   };
 
   const navItems = [
-    { href: '/feed', label: 'Explore', icon: Compass },
-    { href: '/designers', label: 'Designers', icon: Users },
-    { href: '/services', label: 'Services', icon: ShoppingBag },
-    { href: '/ai-assistant', label: 'AI Assistant', icon: Wand2 },
-    { href: '/upload', label: 'Upload', icon: Upload },
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/feed', label: t('nav.explore'), icon: Compass },
+    { href: '/designers', label: t('nav.designers'), icon: Users },
+    { href: '/services', label: t('nav.services'), icon: ShoppingBag },
+    { href: '/ai-assistant', label: t('nav.aiAssistant'), icon: Wand2 },
+    { href: '/upload', label: t('nav.upload'), icon: Upload },
+    { href: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -88,6 +91,7 @@ export const Header = () => {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
+          <LanguageSelector variant="minimal" />
           <ThemeToggle />
           {user ? (
             <>
@@ -110,15 +114,15 @@ export const Header = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => navigate(`/designer/${user.id}`)}>
                     <User className="mr-2 h-4 w-4" />
-                    My Profile
+                    {t('nav.myProfile')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/profile')}>
                     <User className="mr-2 h-4 w-4" />
-                    Edit Profile
+                    {t('nav.editProfile')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/messages')}>
                     <MessageCircle className="mr-2 h-4 w-4" />
-                    Messages
+                    {t('nav.messages')}
                     {unreadMessages > 0 && (
                       <span className="ml-auto bg-primary text-primary-foreground text-xs px-1.5 rounded-full">
                         {unreadMessages}
@@ -127,16 +131,16 @@ export const Header = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/bookmarks')}>
                     <Bookmark className="mr-2 h-4 w-4" />
-                    Saved Designs
+                    {t('nav.savedDesigns')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                     <LayoutDashboard className="mr-2 h-4 w-4" />
-                    Dashboard
+                    {t('nav.dashboard')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
-                    Sign out
+                    {t('nav.logout')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -154,10 +158,10 @@ export const Header = () => {
           ) : (
             <div className="flex items-center gap-2">
               <Link to="/login">
-                <Button variant="ghost">Sign in</Button>
+                <Button variant="ghost">{t('auth.signIn')}</Button>
               </Link>
               <Link to="/register">
-                <Button variant="gradient">Get Started</Button>
+                <Button variant="gradient">{t('common.getStarted')}</Button>
               </Link>
             </div>
           )}

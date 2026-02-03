@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FollowButton } from '@/components/designer/FollowButton';
 import { AvailabilityBadge } from '@/components/designer/AvailabilityBadge';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Search,
@@ -38,6 +39,7 @@ interface Designer {
 }
 
 const Designers = () => {
+  const { t } = useLanguage();
   const [designers, setDesigners] = useState<Designer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -129,10 +131,10 @@ const Designers = () => {
           className="text-center mb-8"
         >
           <h1 className="font-display text-3xl font-bold mb-2">
-            Find <span className="text-gradient-primary">Designers</span>
+            {t('designers.title').split(' ')[0]} <span className="text-gradient-primary">{t('designers.title').split(' ').slice(1).join(' ')}</span>
           </h1>
           <p className="text-muted-foreground max-w-lg mx-auto">
-            Discover talented designers available for hire and collaboration
+            {t('designers.desc')}
           </p>
         </motion.div>
 
@@ -141,7 +143,7 @@ const Designers = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search by name, skill, or location..."
+              placeholder={t('designers.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -155,7 +157,7 @@ const Designers = () => {
               className="gap-2"
             >
               <Users className="h-4 w-4" />
-              Available for Hire
+              {t('designers.availableForHire')}
             </Button>
 
             <Select value={sortBy} onValueChange={setSortBy}>
@@ -164,8 +166,8 @@ const Designers = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="followers">Most Followers</SelectItem>
-                <SelectItem value="designs">Most Designs</SelectItem>
+                <SelectItem value="followers">{t('designers.mostFollowers')}</SelectItem>
+                <SelectItem value="designs">{t('designers.mostDesigns')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -190,9 +192,9 @@ const Designers = () => {
         ) : filteredDesigners.length === 0 ? (
           <div className="text-center py-16">
             <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-            <h3 className="font-semibold mb-2">No designers found</h3>
+            <h3 className="font-semibold mb-2">{t('designers.noFound')}</h3>
             <p className="text-muted-foreground">
-              Try adjusting your search or filters
+              {t('designers.adjustFilters')}
             </p>
           </div>
         ) : (
@@ -262,8 +264,8 @@ const Designers = () => {
 
                         {/* Stats */}
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                          <span>{designer.followers_count} followers</span>
-                          <span>{designer.designs_count} designs</span>
+                          <span>{designer.followers_count} {t('designers.followers')}</span>
+                          <span>{designer.designs_count} {t('designers.designs')}</span>
                         </div>
                       </div>
                     </div>

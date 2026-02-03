@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Camera, Loader2, Save, X, Plus, MapPin, DollarSign, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
@@ -28,6 +29,7 @@ type ProfileForm = z.infer<typeof profileSchema>;
 
 const Profile = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -180,10 +182,10 @@ const Profile = () => {
             />
             <div>
               <h1 className="font-display text-3xl font-bold">
-                Profil <span className="text-gradient-primary">Kamu</span>
+                {t('profile.yourProfile').split(' ')[0]} <span className="text-gradient-primary">{t('profile.yourProfile').split(' ').slice(1).join(' ')}</span>
               </h1>
               <p className="text-muted-foreground">
-                Tampilkan dirimu ke komunitas SwipeLab
+                {t('profile.showCommunity')}
               </p>
             </div>
           </div>
@@ -219,20 +221,20 @@ const Profile = () => {
                 />
               </div>
               <div>
-                <p className="font-medium">Profile Photo</p>
+                <p className="font-medium">{t('profile.photo')}</p>
                 <p className="text-sm text-muted-foreground">
-                  Click the camera to upload a new photo
+                  {t('profile.photoDesc')}
                 </p>
               </div>
             </div>
 
             {/* Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">Display Name</Label>
+              <Label htmlFor="name">{t('profile.displayName')}</Label>
               <Input
                 {...register('name')}
                 id="name"
-                placeholder="Your name"
+                placeholder={t('auth.namePlaceholder')}
                 className="h-12"
               />
               {errors.name && (
@@ -242,11 +244,11 @@ const Profile = () => {
 
             {/* Bio */}
             <div className="space-y-2">
-              <Label htmlFor="bio">Bio</Label>
+              <Label htmlFor="bio">{t('profile.bio')}</Label>
               <Textarea
                 {...register('bio')}
                 id="bio"
-                placeholder="Tell the community about yourself..."
+                placeholder={t('profile.bioPlaceholder')}
                 rows={4}
               />
               {errors.bio && (
@@ -258,9 +260,9 @@ const Profile = () => {
             <div className="p-4 rounded-xl bg-secondary/50 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label className="text-base font-medium">Available for Hire</Label>
+                  <Label className="text-base font-medium">{t('profile.availableForHire')}</Label>
                   <p className="text-sm text-muted-foreground">
-                    Let others know you're open to work
+                    {t('profile.availableDesc')}
                   </p>
                 </div>
                 <Switch
@@ -274,7 +276,7 @@ const Profile = () => {
                   <div className="space-y-2">
                     <Label htmlFor="location" className="flex items-center gap-1.5">
                       <MapPin className="h-3.5 w-3.5" />
-                      Location
+                      {t('profile.location')}
                     </Label>
                     <Input
                       {...register('location')}
@@ -285,7 +287,7 @@ const Profile = () => {
                   <div className="space-y-2">
                     <Label htmlFor="hourly_rate" className="flex items-center gap-1.5">
                       <DollarSign className="h-3.5 w-3.5" />
-                      Hourly Rate
+                      {t('profile.hourlyRate')}
                     </Label>
                     <Input
                       {...register('hourly_rate')}
@@ -299,7 +301,7 @@ const Profile = () => {
 
             {/* Skills */}
             <div className="space-y-4">
-              <Label>Skills</Label>
+              <Label>{t('profile.skills')}</Label>
               <div className="flex flex-wrap gap-2 mb-3">
                 {skills.map((skill) => (
                   <Badge
@@ -322,7 +324,7 @@ const Profile = () => {
                 <Input
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
-                  placeholder="Add a skill (e.g., Figma, UI Design)"
+                  placeholder={t('profile.addSkill')}
                   className="h-10"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
@@ -341,7 +343,7 @@ const Profile = () => {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                {skills.length}/10 skills added
+                {skills.length}/10 {t('profile.skills').toLowerCase()}
               </p>
             </div>
 
@@ -357,7 +359,7 @@ const Profile = () => {
               ) : (
                 <>
                   <Save className="h-5 w-5" />
-                  Save Changes
+                  {t('profile.saveChanges')}
                 </>
               )}
             </Button>

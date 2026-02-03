@@ -8,6 +8,7 @@ import { FeedbackSummary } from '@/components/dashboard/FeedbackSummary';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Upload, Heart, Eye, Sparkles, Image, Loader2, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -47,6 +48,7 @@ interface DesignFeedbackSummary {
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [designs, setDesigns] = useState<Design[]>([]);
   const [aiFeedbacks, setAiFeedbacks] = useState<AIFeedback[]>([]);
   const [feedbackSummaries, setFeedbackSummaries] = useState<DesignFeedbackSummary[]>([]);
@@ -174,7 +176,7 @@ const Dashboard = () => {
   };
 
   const handleDeleteDesign = async (designId: string) => {
-    if (!confirm('Are you sure you want to delete this design?')) return;
+    if (!confirm(t('common.delete') + '?')) return;
 
     const { error } = await supabase
       .from('designs')
@@ -210,30 +212,30 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
         >
           <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-            Swipe ideas. Discover talent. <span className="text-gradient-primary">Powered by AI.</span>
+            {t('dashboard.tagline')} <span className="text-gradient-primary">{t('hero.poweredBy')}</span>
           </h1>
           <p className="text-muted-foreground mb-8 max-w-xl">
-            Kelola desain Anda, lihat feedback dari komunitas, dan dapatkan insight AI untuk meningkatkan karya Anda.
+            {t('dashboard.desc')}
           </p>
 
           {/* Stats */}
           <div className="grid gap-4 md:grid-cols-3 mb-8">
             <StatCard
-              label="Total Designs"
+              label={t('dashboard.totalDesigns')}
               value={stats.totalDesigns}
               icon={Image}
               color="lavender"
               delay={0}
             />
             <StatCard
-              label="Likes Received"
+              label={t('dashboard.likesReceived')}
               value={stats.totalLikes}
               icon={Heart}
               color="coral"
               delay={0.1}
             />
             <StatCard
-              label="Designs Swiped"
+              label={t('dashboard.designsSwiped')}
               value={stats.totalSwipes}
               icon={Eye}
               color="mint"
@@ -246,15 +248,15 @@ const Dashboard = () => {
             <TabsList className="grid w-full max-w-2xl grid-cols-3">
               <TabsTrigger value="designs" className="flex items-center gap-2">
                 <Image className="h-4 w-4" />
-                My Designs
+                {t('dashboard.myDesigns')}
               </TabsTrigger>
               <TabsTrigger value="community-feedback" className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
-                Community Feedback
+                {t('dashboard.communityFeedback')}
               </TabsTrigger>
               <TabsTrigger value="ai-feedback" className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
-                AI Feedback
+                {t('dashboard.aiFeedback')}
               </TabsTrigger>
             </TabsList>
 
@@ -262,14 +264,14 @@ const Dashboard = () => {
               {designs.length === 0 ? (
                 <div className="text-center py-16 rounded-2xl border-2 border-dashed">
                   <Image className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="font-display text-xl font-semibold mb-2">No designs yet</h3>
+                  <h3 className="font-display text-xl font-semibold mb-2">{t('dashboard.noDesigns')}</h3>
                   <p className="text-muted-foreground mb-6">
-                    Upload your first design to get started
+                    {t('dashboard.uploadFirst')}
                   </p>
                   <Link to="/upload">
                     <Button variant="gradient">
                       <Upload className="h-4 w-4" />
-                      Upload Design
+                      {t('upload.submit')}
                     </Button>
                   </Link>
                 </div>
@@ -295,9 +297,9 @@ const Dashboard = () => {
               {aiFeedbacks.length === 0 ? (
                 <div className="text-center py-16 rounded-2xl border-2 border-dashed">
                   <Sparkles className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="font-display text-xl font-semibold mb-2">No AI feedback yet</h3>
+                  <h3 className="font-display text-xl font-semibold mb-2">{t('dashboard.noAiFeedback')}</h3>
                   <p className="text-muted-foreground mb-6">
-                    Request AI analysis on your designs to get insights
+                    {t('dashboard.requestAi')}
                   </p>
                 </div>
               ) : (
