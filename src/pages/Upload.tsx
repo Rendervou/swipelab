@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Upload as UploadIcon, Image, Loader2, X, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
@@ -25,6 +26,7 @@ type UploadForm = z.infer<typeof uploadSchema>;
 
 const Upload = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
@@ -122,18 +124,18 @@ const Upload = () => {
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-2 text-sm font-medium mb-4">
               <Sparkles className="h-4 w-4 text-gold" />
-              Share your work
+              {t('upload.shareWork')}
             </div>
-            <h1 className="font-display text-3xl font-bold mb-2">Upload a Design</h1>
+            <h1 className="font-display text-3xl font-bold mb-2">{t('upload.title')}</h1>
             <p className="text-muted-foreground">
-              Share your creativity and get feedback from the community
+              {t('upload.desc')}
             </p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Image upload */}
             <div className="space-y-2">
-              <Label>Design Image</Label>
+              <Label>{t('upload.designImage')}</Label>
               
               {!imagePreview ? (
                 <div
@@ -145,9 +147,9 @@ const Upload = () => {
                       <Image className="h-8 w-8 text-muted-foreground" />
                     </div>
                     <div>
-                      <p className="font-medium mb-1">Click to upload</p>
+                      <p className="font-medium mb-1">{t('upload.clickUpload')}</p>
                       <p className="text-sm text-muted-foreground">
-                        PNG, JPG or WebP (max 5MB)
+                        {t('upload.maxSize')}
                       </p>
                     </div>
                   </div>
@@ -180,11 +182,11 @@ const Upload = () => {
 
             {/* Title */}
             <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">{t('upload.titleLabel')}</Label>
               <Input
                 {...register('title')}
                 id="title"
-                placeholder="Give your design a catchy title"
+                placeholder={t('upload.titlePlaceholder')}
                 className="h-12"
               />
               {errors.title && (
@@ -194,15 +196,15 @@ const Upload = () => {
 
             {/* Category */}
             <div className="space-y-2">
-              <Label>Category</Label>
+              <Label>{t('upload.categoryLabel')}</Label>
               <Select onValueChange={(val: any) => setValue('category', val)} value={categoryValue}>
                 <SelectTrigger className="h-12">
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder={t('upload.selectCategory')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ui_ux">UI/UX Design</SelectItem>
+                  <SelectItem value="ui_ux">{t('category.ui_ux_design')}</SelectItem>
                   <SelectItem value="poster">Poster</SelectItem>
-                  <SelectItem value="illustration">Illustration</SelectItem>
+                  <SelectItem value="illustration">{t('category.illustration')}</SelectItem>
                 </SelectContent>
               </Select>
               {errors.category && (
@@ -212,11 +214,11 @@ const Upload = () => {
 
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description">Description (optional)</Label>
+              <Label htmlFor="description">{t('upload.descLabel')} ({t('common.optional')})</Label>
               <Textarea
                 {...register('description')}
                 id="description"
-                placeholder="Tell us about your design..."
+                placeholder={t('upload.descPlaceholder')}
                 rows={4}
               />
               {errors.description && (
@@ -236,7 +238,7 @@ const Upload = () => {
               ) : (
                 <>
                   <UploadIcon className="h-5 w-5" />
-                  Upload Design
+                  {t('upload.submit')}
                 </>
               )}
             </Button>

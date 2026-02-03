@@ -24,22 +24,23 @@ import { ArrowLeft, Loader2, Plus, Trash2, Upload, Image as ImageIcon } from 'lu
 import { toast } from 'sonner';
 import swipelabLogo from '@/assets/swipelab-logo.png';
 
+// More flexible schema - only title and category are required
 const serviceSchema = z.object({
-  title: z.string().min(5, 'Title must be at least 5 characters').max(100),
-  description: z.string().min(50, 'Description must be at least 50 characters').max(2000),
+  title: z.string().min(3, 'Title must be at least 3 characters').max(100),
+  description: z.string().max(2000).optional(),
   category: z.string().min(1, 'Please select a category'),
-  basic_price: z.number().min(10000, 'Minimum price is Rp 10,000').optional(),
+  basic_price: z.number().min(0).optional().nullable(),
   basic_description: z.string().max(500).optional(),
-  basic_delivery_days: z.number().min(1).max(365).optional(),
-  basic_revisions: z.number().min(0).max(99).optional(),
-  standard_price: z.number().min(10000).optional(),
+  basic_delivery_days: z.number().min(1).max(365).optional().nullable(),
+  basic_revisions: z.number().min(0).max(99).optional().nullable(),
+  standard_price: z.number().min(0).optional().nullable(),
   standard_description: z.string().max(500).optional(),
-  standard_delivery_days: z.number().min(1).max(365).optional(),
-  standard_revisions: z.number().min(0).max(99).optional(),
-  premium_price: z.number().min(10000).optional(),
+  standard_delivery_days: z.number().min(1).max(365).optional().nullable(),
+  standard_revisions: z.number().min(0).max(99).optional().nullable(),
+  premium_price: z.number().min(0).optional().nullable(),
   premium_description: z.string().max(500).optional(),
-  premium_delivery_days: z.number().min(1).max(365).optional(),
-  premium_revisions: z.number().min(0).max(99).optional(),
+  premium_delivery_days: z.number().min(1).max(365).optional().nullable(),
+  premium_revisions: z.number().min(0).max(99).optional().nullable(),
 });
 
 type ServiceForm = z.infer<typeof serviceSchema>;
@@ -65,7 +66,7 @@ const ServiceCreate = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [faqItems, setFaqItems] = useState<FAQItem[]>([{ question: '', answer: '' }]);
+  const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
   const [portfolioImages, setPortfolioImages] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
 
@@ -140,12 +141,6 @@ const ServiceCreate = () => {
       return;
     }
 
-    // Validate at least basic plan
-    if (!data.basic_price) {
-      toast.error('Please set at least a Basic plan price');
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -154,12 +149,12 @@ const ServiceCreate = () => {
       const { error } = await supabase.from('designer_services').insert({
         designer_id: user.id,
         title: data.title,
-        description: data.description,
+        description: data.description || '',
         category: data.category as any,
-        basic_price: data.basic_price,
+        basic_price: data.basic_price || null,
         basic_description: data.basic_description || null,
-        basic_delivery_days: data.basic_delivery_days,
-        basic_revisions: data.basic_revisions,
+        basic_delivery_days: data.basic_delivery_days || null,
+        basic_revisions: data.basic_revisions || null,
         standard_price: data.standard_price || null,
         standard_description: data.standard_description || null,
         standard_delivery_days: data.standard_delivery_days || null,
@@ -189,8 +184,8 @@ const ServiceCreate = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-24 text-center">
-          <h1 className="text-2xl font-bold mb-4">Please login first</h1>
-          <Button onClick={() => navigate('/login')}>Login</Button>
+          <h1 className="text-2xl font-bold mb-4">{t('auth.signIn')}</h1>
+          <Button onClick={() => navigate('/login')}>{t('nav.login')}</Button>
         </div>
       </div>
     );
@@ -226,7 +221,7 @@ const ServiceCreate = () => {
             </h1>
           </div>
           <p className="text-muted-foreground">
-            Buat jasa desain dan mulai dapatkan klien
+            {t('services.createDesc')}
           </p>
         </motion.div>
 
@@ -234,7 +229,7 @@ const ServiceCreate = () => {
           {/* Basic Info */}
           <Card>
             <CardHeader>
-              <CardTitle>Informasi Dasar</CardTitle>
+              <CardTitle>{t('services.basicInfo')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -253,7 +248,7 @@ const ServiceCreate = () => {
                 <Label htmlFor="category">{t('services.category')} *</Label>
                 <Select onValueChange={(value) => setValue('category', value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder={t('upload.selectCategory')} />
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((cat) => (
@@ -269,11 +264,11 @@ const ServiceCreate = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">{t('services.serviceDescription')} *</Label>
+                <Label htmlFor="description">{t('services.serviceDescription')} ({t('common.optional')})</Label>
                 <Textarea
                   {...register('description')}
                   id="description"
-                  placeholder="Describe your service in detail..."
+                  placeholder={t('upload.descPlaceholder')}
                   rows={5}
                 />
                 {errors.description && (
@@ -286,7 +281,7 @@ const ServiceCreate = () => {
           {/* Portfolio Images */}
           <Card>
             <CardHeader>
-              <CardTitle>{t('services.portfolio')}</CardTitle>
+              <CardTitle>{t('services.portfolio')} ({t('common.optional')})</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -316,7 +311,7 @@ const ServiceCreate = () => {
                   ) : (
                     <>
                       <ImageIcon className="h-6 w-6 text-muted-foreground mb-2" />
-                      <span className="text-sm text-muted-foreground">Add Image</span>
+                      <span className="text-sm text-muted-foreground">{t('services.addImage')}</span>
                     </>
                   )}
                 </label>
@@ -327,15 +322,15 @@ const ServiceCreate = () => {
           {/* Pricing Tiers */}
           <Card>
             <CardHeader>
-              <CardTitle>Paket Harga</CardTitle>
+              <CardTitle>{t('services.pricingPlans')} ({t('common.optional')})</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-3 gap-6">
                 {/* Basic */}
                 <div className="space-y-4 p-4 border rounded-lg">
-                  <h3 className="font-semibold text-center">{t('services.basicPlan')} *</h3>
+                  <h3 className="font-semibold text-center">{t('services.basicPlan')}</h3>
                   <div className="space-y-2">
-                    <Label>Harga (Rp)</Label>
+                    <Label>{t('services.price')} (Rp)</Label>
                     <Input
                       type="number"
                       {...register('basic_price', { valueAsNumber: true })}
@@ -343,7 +338,7 @@ const ServiceCreate = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Deskripsi</Label>
+                    <Label>{t('services.serviceDescription')}</Label>
                     <Textarea
                       {...register('basic_description')}
                       placeholder="What's included..."
@@ -352,14 +347,14 @@ const ServiceCreate = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1">
-                      <Label className="text-xs">Hari</Label>
+                      <Label className="text-xs">{t('services.days')}</Label>
                       <Input
                         type="number"
                         {...register('basic_delivery_days', { valueAsNumber: true })}
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Revisi</Label>
+                      <Label className="text-xs">{t('services.revisions')}</Label>
                       <Input
                         type="number"
                         {...register('basic_revisions', { valueAsNumber: true })}
@@ -372,7 +367,7 @@ const ServiceCreate = () => {
                 <div className="space-y-4 p-4 border rounded-lg border-primary">
                   <h3 className="font-semibold text-center text-primary">{t('services.standardPlan')}</h3>
                   <div className="space-y-2">
-                    <Label>Harga (Rp)</Label>
+                    <Label>{t('services.price')} (Rp)</Label>
                     <Input
                       type="number"
                       {...register('standard_price', { valueAsNumber: true })}
@@ -380,7 +375,7 @@ const ServiceCreate = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Deskripsi</Label>
+                    <Label>{t('services.serviceDescription')}</Label>
                     <Textarea
                       {...register('standard_description')}
                       placeholder="What's included..."
@@ -389,14 +384,14 @@ const ServiceCreate = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1">
-                      <Label className="text-xs">Hari</Label>
+                      <Label className="text-xs">{t('services.days')}</Label>
                       <Input
                         type="number"
                         {...register('standard_delivery_days', { valueAsNumber: true })}
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Revisi</Label>
+                      <Label className="text-xs">{t('services.revisions')}</Label>
                       <Input
                         type="number"
                         {...register('standard_revisions', { valueAsNumber: true })}
@@ -409,7 +404,7 @@ const ServiceCreate = () => {
                 <div className="space-y-4 p-4 border rounded-lg bg-gradient-to-br from-primary/5 to-primary/10">
                   <h3 className="font-semibold text-center">{t('services.premiumPlan')}</h3>
                   <div className="space-y-2">
-                    <Label>Harga (Rp)</Label>
+                    <Label>{t('services.price')} (Rp)</Label>
                     <Input
                       type="number"
                       {...register('premium_price', { valueAsNumber: true })}
@@ -417,7 +412,7 @@ const ServiceCreate = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Deskripsi</Label>
+                    <Label>{t('services.serviceDescription')}</Label>
                     <Textarea
                       {...register('premium_description')}
                       placeholder="What's included..."
@@ -426,14 +421,14 @@ const ServiceCreate = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1">
-                      <Label className="text-xs">Hari</Label>
+                      <Label className="text-xs">{t('services.days')}</Label>
                       <Input
                         type="number"
                         {...register('premium_delivery_days', { valueAsNumber: true })}
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Revisi</Label>
+                      <Label className="text-xs">{t('services.revisions')}</Label>
                       <Input
                         type="number"
                         {...register('premium_revisions', { valueAsNumber: true })}
@@ -448,16 +443,20 @@ const ServiceCreate = () => {
           {/* FAQ */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>{t('services.faq')}</CardTitle>
+              <CardTitle>{t('services.faq')} ({t('common.optional')})</CardTitle>
               <Button type="button" variant="outline" size="sm" onClick={addFaqItem}>
                 <Plus className="h-4 w-4 mr-1" />
                 Add
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
-              {faqItems.map((item, idx) => (
-                <div key={idx} className="space-y-2 p-4 border rounded-lg relative">
-                  {faqItems.length > 1 && (
+              {faqItems.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  Click "Add" to add FAQ items
+                </p>
+              ) : (
+                faqItems.map((item, idx) => (
+                  <div key={idx} className="space-y-2 p-4 border rounded-lg relative">
                     <button
                       type="button"
                       onClick={() => removeFaqItem(idx)}
@@ -465,26 +464,26 @@ const ServiceCreate = () => {
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
-                  )}
-                  <div>
-                    <Label>Question</Label>
-                    <Input
-                      value={item.question}
-                      onChange={(e) => updateFaqItem(idx, 'question', e.target.value)}
-                      placeholder="e.g., What file formats do you deliver?"
-                    />
+                    <div>
+                      <Label>{t('services.question')}</Label>
+                      <Input
+                        value={item.question}
+                        onChange={(e) => updateFaqItem(idx, 'question', e.target.value)}
+                        placeholder="e.g., What file formats do you deliver?"
+                      />
+                    </div>
+                    <div>
+                      <Label>{t('services.answer')}</Label>
+                      <Textarea
+                        value={item.answer}
+                        onChange={(e) => updateFaqItem(idx, 'answer', e.target.value)}
+                        placeholder="Your answer..."
+                        rows={2}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label>Answer</Label>
-                    <Textarea
-                      value={item.answer}
-                      onChange={(e) => updateFaqItem(idx, 'answer', e.target.value)}
-                      placeholder="Your answer..."
-                      rows={2}
-                    />
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </CardContent>
           </Card>
 
