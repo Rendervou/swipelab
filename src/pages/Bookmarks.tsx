@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Bookmark, ArrowRight } from 'lucide-react';
 
 interface Design {
@@ -21,6 +22,7 @@ interface Design {
 
 const Bookmarks = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [designs, setDesigns] = useState<Design[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -72,9 +74,9 @@ const Bookmarks = () => {
         <Header />
         <div className="container py-16 text-center">
           <Bookmark className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-          <h1 className="text-xl font-bold mb-2">Sign in to view saved designs</h1>
+          <h1 className="text-xl font-bold mb-2">{t('bookmarks.signInRequired')}</h1>
           <Link to="/login">
-            <Button>Sign In</Button>
+            <Button>{t('auth.signIn')}</Button>
           </Link>
         </div>
       </div>
@@ -92,10 +94,10 @@ const Bookmarks = () => {
           className="mb-8"
         >
           <h1 className="font-display text-3xl font-bold mb-2">
-            Saved Designs
+            {t('bookmarks.title')}
           </h1>
           <p className="text-muted-foreground">
-            Your bookmarked designs for inspiration
+            {t('bookmarks.description')}
           </p>
         </motion.div>
 
@@ -108,13 +110,13 @@ const Bookmarks = () => {
         ) : designs.length === 0 ? (
           <div className="text-center py-16">
             <Bookmark className="h-16 w-16 mx-auto mb-4 text-muted-foreground/30" />
-            <h3 className="font-semibold text-lg mb-2">No saved designs yet</h3>
+            <h3 className="font-semibold text-lg mb-2">{t('bookmarks.empty')}</h3>
             <p className="text-muted-foreground mb-6">
-              Click the bookmark icon on any design to save it here
+              {t('bookmarks.emptyDesc')}
             </p>
             <Link to="/">
               <Button variant="gradient" className="gap-2">
-                Explore Designs
+                {t('bookmarks.explore')}
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
