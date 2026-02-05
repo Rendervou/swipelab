@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { AIGeneralResult } from '@/components/ai/AIGeneralResult';
 import { AIColorsResult } from '@/components/ai/AIColorsResult';
 import { AILayoutResult } from '@/components/ai/AILayoutResult';
@@ -33,38 +34,8 @@ interface FeatureCard {
   color: string;
 }
 
-const featureCards: FeatureCard[] = [
-  {
-    type: 'colors',
-    title: 'Analyze Colors',
-    description: 'Generate a color palette from this design',
-    icon: Palette,
-    color: 'bg-lavender/20 text-lavender',
-  },
-  {
-    type: 'layout',
-    title: 'Layout Review',
-    description: 'Review the layout and hierarchy',
-    icon: LayoutGrid,
-    color: 'bg-electric-blue/20 text-electric-blue',
-  },
-  {
-    type: 'general',
-    title: 'Improvements',
-    description: 'What can be improved in this design?',
-    icon: Lightbulb,
-    color: 'bg-gold/20 text-gold',
-  },
-  {
-    type: 'variations',
-    title: 'Variations',
-    description: 'Suggest design variations',
-    icon: Wand2,
-    color: 'bg-mint/20 text-mint',
-  },
-];
-
 const AIAssistant = () => {
+  const { t } = useLanguage();
   const [selectedTab, setSelectedTab] = useState<AnalysisType>('general');
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [customPrompt, setCustomPrompt] = useState('');
@@ -72,6 +43,37 @@ const AIAssistant = () => {
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [currentAnalysisType, setCurrentAnalysisType] = useState<AnalysisType | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const featureCards: FeatureCard[] = [
+    {
+      type: 'colors',
+      title: t('ai.analyzeColors'),
+      description: t('ai.analyzeColorsDesc'),
+      icon: Palette,
+      color: 'bg-lavender/20 text-lavender',
+    },
+    {
+      type: 'layout',
+      title: t('ai.layoutReview'),
+      description: t('ai.layoutReviewDesc'),
+      icon: LayoutGrid,
+      color: 'bg-electric-blue/20 text-electric-blue',
+    },
+    {
+      type: 'general',
+      title: t('ai.improvements'),
+      description: t('ai.improvementsDesc'),
+      icon: Lightbulb,
+      color: 'bg-gold/20 text-gold',
+    },
+    {
+      type: 'variations',
+      title: t('ai.variations'),
+      description: t('ai.variationsDesc'),
+      icon: Wand2,
+      color: 'bg-mint/20 text-mint',
+    },
+  ];
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -161,10 +163,10 @@ const AIAssistant = () => {
             <Sparkles className="h-8 w-8 text-white" />
           </div>
           <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-            AI Design Assistant
+            {t('ai.title')}
           </h1>
           <p className="text-muted-foreground">
-            Get instant feedback, color palettes, and improvement suggestions
+            {t('ai.description')}
           </p>
         </motion.div>
 
@@ -213,7 +215,7 @@ const AIAssistant = () => {
               className="text-center py-8"
             >
               <p className="text-muted-foreground mb-4">
-                Upload a design and ask a question to get started
+                {t('ai.uploadPrompt')}
               </p>
             </motion.div>
           ) : (
@@ -234,7 +236,7 @@ const AIAssistant = () => {
                     <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
                       <div className="text-center">
                         <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-2" />
-                        <p className="text-sm text-muted-foreground">Analyzing design...</p>
+                        <p className="text-sm text-muted-foreground">{t('ai.analyzing')}</p>
                       </div>
                     </div>
                   )}
@@ -303,7 +305,7 @@ const AIAssistant = () => {
                 {uploadedImage ? <ImageIcon className="h-4 w-4" /> : <Upload className="h-4 w-4" />}
               </Button>
               <Input
-                placeholder="Ask about colors, layout, improvements, or request design variations..."
+                placeholder={t('ai.inputPlaceholder')}
                 value={customPrompt}
                 onChange={(e) => setCustomPrompt(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}

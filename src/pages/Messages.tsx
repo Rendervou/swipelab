@@ -9,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
 import {
   Send,
@@ -39,6 +40,7 @@ interface Message {
 
 const Messages = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const selectedUserId = searchParams.get('user');
   
@@ -251,9 +253,9 @@ const Messages = () => {
         <Header />
         <div className="container py-16 text-center">
           <MessageCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-          <h1 className="text-xl font-bold mb-2">Sign in to view messages</h1>
+          <h1 className="text-xl font-bold mb-2">{t('messages.signInRequired')}</h1>
           <Link to="/login">
-            <Button>Sign In</Button>
+            <Button>{t('auth.signIn')}</Button>
           </Link>
         </div>
       </div>
@@ -273,7 +275,7 @@ const Messages = () => {
             }`}
           >
             <div className="p-4 border-b">
-              <h2 className="font-display font-semibold">Messages</h2>
+              <h2 className="font-display font-semibold">{t('messages.title')}</h2>
             </div>
 
             <ScrollArea className="h-[calc(100%-4rem)]">
@@ -292,7 +294,7 @@ const Messages = () => {
               ) : conversations.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground">
                   <MessageCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">No conversations yet</p>
+                  <p className="text-sm">{t('messages.noConversations')}</p>
                 </div>
               ) : (
                 <div className="p-2">
@@ -420,7 +422,7 @@ const Messages = () => {
                     <Input
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
-                      placeholder="Type a message..."
+                      placeholder={t('messages.typePlaceholder')}
                       className="flex-1"
                     />
                     <Button
@@ -440,7 +442,7 @@ const Messages = () => {
               <div className="flex-1 flex items-center justify-center text-muted-foreground">
                 <div className="text-center">
                   <MessageCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Select a conversation to start messaging</p>
+                  <p>{t('messages.selectConversation')}</p>
                 </div>
               </div>
             )}

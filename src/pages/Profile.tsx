@@ -17,6 +17,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Camera, Loader2, Save, X, Plus, MapPin, DollarSign, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import swipelabLogo from '@/assets/swipelab-logo.png';
+import { MyServicesSection } from '@/components/profile/MyServicesSection';
 
 const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50),
@@ -364,6 +365,11 @@ const Profile = () => {
               )}
             </Button>
           </form>
+
+          {/* My Services Section */}
+          <div className="mt-10 pt-8 border-t">
+            <MyServicesSection />
+          </div>
         </motion.div>
       </main>
     </div>

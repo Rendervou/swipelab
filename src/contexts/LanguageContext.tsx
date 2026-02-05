@@ -171,6 +171,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'profile.skills': 'Keahlian',
     'profile.addSkill': 'Tambah keahlian (mis: Figma, UI Design)',
     'profile.saveChanges': 'Simpan Perubahan',
+    'profile.myServices': 'Jasa Saya',
+    'profile.noServices': 'Belum ada jasa',
+    'profile.createFirstService': 'Buat jasa pertamamu dan mulai dapatkan klien',
+    'profile.manageServices': 'Kelola Jasa',
     
     // Feed
     'feed.guestViewing': 'Kamu sedang melihat sebagai tamu',
@@ -180,6 +184,36 @@ export const translations: Record<Language, Record<string, string>> = {
     'feed.youLikeDesigns': 'Kamu suka design-design ini!',
     'feed.swipedLimit': 'Kamu sudah swipe {count} design. Untuk melanjutkan, silakan login atau buat akun gratis.',
     'feed.unlimitedSwipes': 'Swipe tanpa batas & simpan favoritmu!',
+    // Bookmarks
+    'bookmarks.title': 'Desain Tersimpan',
+    'bookmarks.description': 'Desain yang kamu simpan untuk inspirasi',
+    'bookmarks.empty': 'Belum ada desain tersimpan',
+    'bookmarks.emptyDesc': 'Klik ikon bookmark pada desain untuk menyimpannya',
+    'bookmarks.explore': 'Jelajahi Desain',
+    'bookmarks.signInRequired': 'Masuk untuk melihat desain tersimpan',
+    
+    // Messages
+    'messages.title': 'Pesan',
+    'messages.noConversations': 'Belum ada percakapan',
+    'messages.selectConversation': 'Pilih percakapan untuk mulai mengobrol',
+    'messages.typePlaceholder': 'Ketik pesan...',
+    'messages.signInRequired': 'Masuk untuk melihat pesan',
+    
+    // AI Assistant
+    'ai.title': 'AI Design Assistant',
+    'ai.description': 'Dapatkan feedback instan, palet warna, dan saran perbaikan',
+    'ai.analyzeColors': 'Analisis Warna',
+    'ai.analyzeColorsDesc': 'Buat palet warna dari desain ini',
+    'ai.layoutReview': 'Review Layout',
+    'ai.layoutReviewDesc': 'Review layout dan hierarki',
+    'ai.improvements': 'Perbaikan',
+    'ai.improvementsDesc': 'Apa yang bisa diperbaiki dari desain ini?',
+    'ai.variations': 'Variasi',
+    'ai.variationsDesc': 'Sarankan variasi desain',
+    'ai.uploadPrompt': 'Unggah desain dan ajukan pertanyaan untuk memulai',
+    'ai.inputPlaceholder': 'Tanyakan tentang warna, layout, perbaikan, atau minta variasi desain...',
+    'ai.analyzing': 'Menganalisis desain...',
+    
     'feed.maybeLater': 'Nanti saja',
     'feed.registerFree': 'Daftar Gratis',
   },
@@ -343,6 +377,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'profile.skills': 'Skills',
     'profile.addSkill': 'Add a skill (e.g., Figma, UI Design)',
     'profile.saveChanges': 'Save Changes',
+    'profile.myServices': 'My Services',
+    'profile.noServices': 'No services yet',
+    'profile.createFirstService': 'Create your first service and start getting clients',
+    'profile.manageServices': 'Manage Services',
     
     // Feed
     'feed.guestViewing': 'You\'re viewing as a guest',
@@ -352,6 +390,36 @@ export const translations: Record<Language, Record<string, string>> = {
     'feed.youLikeDesigns': 'You like these designs!',
     'feed.swipedLimit': 'You\'ve swiped {count} designs. To continue, please login or create a free account.',
     'feed.unlimitedSwipes': 'Unlimited swipes & save your favorites!',
+    // Bookmarks
+    'bookmarks.title': 'Saved Designs',
+    'bookmarks.description': 'Your bookmarked designs for inspiration',
+    'bookmarks.empty': 'No saved designs yet',
+    'bookmarks.emptyDesc': 'Click the bookmark icon on any design to save it here',
+    'bookmarks.explore': 'Explore Designs',
+    'bookmarks.signInRequired': 'Sign in to view saved designs',
+    
+    // Messages
+    'messages.title': 'Messages',
+    'messages.noConversations': 'No conversations yet',
+    'messages.selectConversation': 'Select a conversation to start messaging',
+    'messages.typePlaceholder': 'Type a message...',
+    'messages.signInRequired': 'Sign in to view messages',
+    
+    // AI Assistant
+    'ai.title': 'AI Design Assistant',
+    'ai.description': 'Get instant feedback, color palettes, and improvement suggestions',
+    'ai.analyzeColors': 'Analyze Colors',
+    'ai.analyzeColorsDesc': 'Generate a color palette from this design',
+    'ai.layoutReview': 'Layout Review',
+    'ai.layoutReviewDesc': 'Review the layout and hierarchy',
+    'ai.improvements': 'Improvements',
+    'ai.improvementsDesc': 'What can be improved in this design?',
+    'ai.variations': 'Variations',
+    'ai.variationsDesc': 'Suggest design variations',
+    'ai.uploadPrompt': 'Upload a design and ask a question to get started',
+    'ai.inputPlaceholder': 'Ask about colors, layout, improvements, or request design variations...',
+    'ai.analyzing': 'Analyzing design...',
+    
     'feed.maybeLater': 'Maybe later',
     'feed.registerFree': 'Register Free',
   },
@@ -515,6 +583,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'profile.skills': '技能',
     'profile.addSkill': '添加技能（如Figma、UI设计）',
     'profile.saveChanges': '保存更改',
+    'profile.myServices': '我的服务',
+    'profile.noServices': '暂无服务',
+    'profile.createFirstService': '创建您的第一个服务并开始获取客户',
+    'profile.manageServices': '管理服务',
     
     // Feed
     'feed.guestViewing': '您正在以访客身份浏览',
@@ -524,6 +596,36 @@ export const translations: Record<Language, Record<string, string>> = {
     'feed.youLikeDesigns': '您喜欢这些设计！',
     'feed.swipedLimit': '您已滑动{count}个设计。请登录或创建免费账户以继续。',
     'feed.unlimitedSwipes': '无限滑动并保存您的收藏！',
+    // Bookmarks
+    'bookmarks.title': '已保存设计',
+    'bookmarks.description': '您收藏的设计灵感',
+    'bookmarks.empty': '暂无保存的设计',
+    'bookmarks.emptyDesc': '点击设计上的书签图标保存',
+    'bookmarks.explore': '探索设计',
+    'bookmarks.signInRequired': '登录查看已保存设计',
+    
+    // Messages
+    'messages.title': '消息',
+    'messages.noConversations': '暂无对话',
+    'messages.selectConversation': '选择一个对话开始聊天',
+    'messages.typePlaceholder': '输入消息...',
+    'messages.signInRequired': '登录查看消息',
+    
+    // AI Assistant
+    'ai.title': 'AI设计助手',
+    'ai.description': '获取即时反馈、配色方案和改进建议',
+    'ai.analyzeColors': '分析颜色',
+    'ai.analyzeColorsDesc': '从设计中生成配色方案',
+    'ai.layoutReview': '布局审查',
+    'ai.layoutReviewDesc': '审查布局和层次结构',
+    'ai.improvements': '改进建议',
+    'ai.improvementsDesc': '这个设计可以改进什么？',
+    'ai.variations': '变体',
+    'ai.variationsDesc': '建议设计变体',
+    'ai.uploadPrompt': '上传设计并提问以开始',
+    'ai.inputPlaceholder': '询问颜色、布局、改进或请求设计变体...',
+    'ai.analyzing': '正在分析设计...',
+    
     'feed.maybeLater': '稍后再说',
     'feed.registerFree': '免费注册',
   },
@@ -687,6 +789,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'profile.skills': 'スキル',
     'profile.addSkill': 'スキルを追加（例：Figma、UIデザイン）',
     'profile.saveChanges': '変更を保存',
+    'profile.myServices': 'マイサービス',
+    'profile.noServices': 'サービスがありません',
+    'profile.createFirstService': '最初のサービスを作成してクライアントを獲得しましょう',
+    'profile.manageServices': 'サービス管理',
     
     // Feed
     'feed.guestViewing': 'ゲストとして閲覧中です',
@@ -696,6 +802,36 @@ export const translations: Record<Language, Record<string, string>> = {
     'feed.youLikeDesigns': 'これらのデザインがお気に入りですね！',
     'feed.swipedLimit': '{count}件のデザインをスワイプしました。続けるにはログインまたは無料アカウントを作成してください。',
     'feed.unlimitedSwipes': '無制限スワイプ＆お気に入りを保存！',
+    // Bookmarks
+    'bookmarks.title': '保存したデザイン',
+    'bookmarks.description': 'インスピレーションのためにブックマークしたデザイン',
+    'bookmarks.empty': '保存したデザインがありません',
+    'bookmarks.emptyDesc': 'デザインのブックマークアイコンをクリックして保存',
+    'bookmarks.explore': 'デザインを探索',
+    'bookmarks.signInRequired': 'ログインして保存したデザインを表示',
+    
+    // Messages
+    'messages.title': 'メッセージ',
+    'messages.noConversations': '会話がありません',
+    'messages.selectConversation': '会話を選択してメッセージを開始',
+    'messages.typePlaceholder': 'メッセージを入力...',
+    'messages.signInRequired': 'ログインしてメッセージを表示',
+    
+    // AI Assistant
+    'ai.title': 'AIデザインアシスタント',
+    'ai.description': '即座にフィードバック、カラーパレット、改善提案を取得',
+    'ai.analyzeColors': '色分析',
+    'ai.analyzeColorsDesc': 'デザインからカラーパレットを生成',
+    'ai.layoutReview': 'レイアウトレビュー',
+    'ai.layoutReviewDesc': 'レイアウトと階層を確認',
+    'ai.improvements': '改善点',
+    'ai.improvementsDesc': 'このデザインで改善できる点は？',
+    'ai.variations': 'バリエーション',
+    'ai.variationsDesc': 'デザインのバリエーションを提案',
+    'ai.uploadPrompt': 'デザインをアップロードして質問してください',
+    'ai.inputPlaceholder': '色、レイアウト、改善点について質問、またはバリエーションをリクエスト...',
+    'ai.analyzing': 'デザインを分析中...',
+    
     'feed.maybeLater': '後で',
     'feed.registerFree': '無料登録',
   },
