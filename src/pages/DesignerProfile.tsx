@@ -12,18 +12,16 @@ import { AvailabilityBadge } from '@/components/designer/AvailabilityBadge';
 import { HireRequestModal } from '@/components/designer/HireRequestModal';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import {
   MapPin,
   DollarSign,
-  Users,
   Image,
-  Heart,
   MessageCircle,
   Briefcase,
-  ExternalLink,
 } from 'lucide-react';
 
-interface DesignerProfile {
+interface DesignerProfileData {
   id: string;
   name: string | null;
   bio: string | null;
@@ -47,7 +45,8 @@ interface Design {
 const DesignerProfile = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
-  const [profile, setProfile] = useState<DesignerProfile | null>(null);
+  const { t } = useLanguage();
+  const [profile, setProfile] = useState<DesignerProfileData | null>(null);
   const [designs, setDesigns] = useState<Design[]>([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -88,7 +87,6 @@ const DesignerProfile = () => {
       .order('created_at', { ascending: false });
 
     if (designsData) {
-      // Fetch like counts
       const designsWithLikes = await Promise.all(
         designsData.map(async (design) => {
           const { count } = await supabase
@@ -108,19 +106,16 @@ const DesignerProfile = () => {
   const fetchStats = async () => {
     if (!id) return;
 
-    // Followers count
     const { count: followersCount } = await supabase
       .from('follows')
       .select('*', { count: 'exact', head: true })
       .eq('following_id', id);
 
-    // Following count
     const { count: followingCount } = await supabase
       .from('follows')
       .select('*', { count: 'exact', head: true })
       .eq('follower_id', id);
 
-    // Total likes
     const { data: userDesigns } = await supabase
       .from('designs')
       .select('id')
@@ -168,9 +163,9 @@ const DesignerProfile = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <main className="container py-16 text-center">
-          <h1 className="text-2xl font-bold mb-4">Designer not found</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('designerProfile.notFound')}</h1>
           <Link to="/">
-            <Button>Back to Home</Button>
+            <Button>{t('common.backToHome')}</Button>
           </Link>
         </main>
       </div>
@@ -190,7 +185,6 @@ const DesignerProfile = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col md:flex-row gap-8 mb-12"
         >
-          {/* Avatar */}
           <div className="flex-shrink-0">
             <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-primary/20">
               <AvatarImage src={profile.avatar_url || undefined} />
@@ -200,7 +194,6 @@ const DesignerProfile = () => {
             </Avatar>
           </div>
 
-          {/* Info */}
           <div className="flex-1 space-y-4">
             <div className="flex flex-wrap items-start gap-3">
               <h1 className="font-display text-3xl font-bold">
@@ -216,7 +209,6 @@ const DesignerProfile = () => {
               <p className="text-muted-foreground max-w-2xl">{profile.bio}</p>
             )}
 
-            {/* Meta info */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               {profile.location && (
                 <span className="flex items-center gap-1">
@@ -232,7 +224,6 @@ const DesignerProfile = () => {
               )}
             </div>
 
-            {/* Skills */}
             {profile.skills && profile.skills.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {profile.skills.map((skill) => (
@@ -243,31 +234,29 @@ const DesignerProfile = () => {
               </div>
             )}
 
-            {/* Stats */}
             <div className="flex items-center gap-6 pt-2">
               <div className="text-center">
                 <p className="font-display text-xl font-bold">{stats.followers}</p>
-                <p className="text-xs text-muted-foreground">Followers</p>
+                <p className="text-xs text-muted-foreground">{t('designerProfile.followers')}</p>
               </div>
               <div className="text-center">
                 <p className="font-display text-xl font-bold">{stats.following}</p>
-                <p className="text-xs text-muted-foreground">Following</p>
+                <p className="text-xs text-muted-foreground">{t('designerProfile.following')}</p>
               </div>
               <div className="text-center">
                 <p className="font-display text-xl font-bold">{stats.likes}</p>
-                <p className="text-xs text-muted-foreground">Likes</p>
+                <p className="text-xs text-muted-foreground">{t('designerProfile.likes')}</p>
               </div>
               <div className="text-center">
                 <p className="font-display text-xl font-bold">{designs.length}</p>
-                <p className="text-xs text-muted-foreground">Designs</p>
+                <p className="text-xs text-muted-foreground">{t('designerProfile.designs')}</p>
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex flex-wrap gap-3 pt-2">
               {isOwnProfile ? (
                 <Link to="/profile">
-                  <Button variant="outline">Edit Profile</Button>
+                  <Button variant="outline">{t('designerProfile.editProfile')}</Button>
                 </Link>
               ) : (
                 <>
@@ -278,13 +267,13 @@ const DesignerProfile = () => {
                       onClick={() => setHireModalOpen(true)}
                     >
                       <Briefcase className="h-4 w-4" />
-                      Hire Me
+                      {t('designerProfile.hireMe')}
                     </Button>
                   )}
                   <Link to={`/messages?user=${id}`}>
                     <Button variant="outline">
                       <MessageCircle className="h-4 w-4" />
-                      Message
+                      {t('designerProfile.message')}
                     </Button>
                   </Link>
                 </>
@@ -296,13 +285,13 @@ const DesignerProfile = () => {
         {/* Designs */}
         <section>
           <h2 className="font-display text-xl font-semibold mb-6">
-            Designs ({designs.length})
+            {t('designerProfile.designCount').replace('{count}', String(designs.length))}
           </h2>
 
           {designs.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Image className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No designs yet</p>
+              <p>{t('designerProfile.noDesigns')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

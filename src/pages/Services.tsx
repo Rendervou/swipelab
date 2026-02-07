@@ -128,23 +128,16 @@ const Services = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-8 pt-24">
+      <main className="container py-8 md:py-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <img 
-              src={swipelabLogo} 
-              alt="SwipeLab" 
-              className="h-10 dark:brightness-110 dark:contrast-110" 
-            />
-            <h1 className="font-display text-3xl md:text-4xl font-bold">
-              {t('services.title')}
-            </h1>
-          </div>
+          <h1 className="font-display text-3xl md:text-4xl font-bold">
+            {t('services.title')}
+          </h1>
           <p className="text-muted-foreground max-w-xl mx-auto mb-6">
             {t('services.description')}
           </p>
@@ -259,10 +252,12 @@ const Services = () => {
                     <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
                       {service.description}
                     </p>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4" />
-                      <span>{service.basic_delivery_days} {t('services.days')}</span>
-                    </div>
+                    {service.basic_delivery_days && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Clock className="h-4 w-4" />
+                        <span>{service.basic_delivery_days} {t('services.days')}</span>
+                      </div>
+                    )}
                   </CardContent>
 
                   <CardFooter className="pt-3 border-t flex items-center justify-between">
@@ -277,12 +272,14 @@ const Services = () => {
                         {service.designer?.name}
                       </span>
                     </div>
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground">{t('services.basicPlan')}</p>
-                      <p className="font-semibold text-primary">
-                        {formatPrice(service.basic_price)}
-                      </p>
-                    </div>
+                    {service.basic_price && (
+                      <div className="text-right">
+                        <p className="text-xs text-muted-foreground">{t('services.startingFrom')}</p>
+                        <p className="font-semibold text-primary">
+                          {formatPrice(service.basic_price)}
+                        </p>
+                      </div>
+                    )}
                   </CardFooter>
                 </Card>
               </motion.div>

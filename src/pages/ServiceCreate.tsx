@@ -108,10 +108,10 @@ const ServiceCreate = () => {
         .getPublicUrl(fileName);
 
       setPortfolioImages(prev => [...prev, publicUrl]);
-      toast.success('Image uploaded');
+      toast.success(t('services.imageUploaded'));
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Failed to upload image');
+      toast.error(t('services.imageUploadFailed'));
     } finally {
       setUploadingImage(false);
     }
@@ -137,7 +137,7 @@ const ServiceCreate = () => {
 
   const onSubmit = async (data: ServiceForm) => {
     if (!user) {
-      toast.error('Please login first');
+      toast.error(t('services.loginRequired'));
       return;
     }
 
@@ -169,11 +169,11 @@ const ServiceCreate = () => {
 
       if (error) throw error;
 
-      toast.success('Service created successfully!');
+      toast.success(t('services.published'));
       navigate('/services');
     } catch (error: any) {
       console.error('Error creating service:', error);
-      toast.error(error.message || 'Failed to create service');
+      toast.error(error.message || t('services.publishFailed'));
     } finally {
       setLoading(false);
     }
@@ -195,7 +195,7 @@ const ServiceCreate = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-8 pt-24 max-w-4xl">
+      <main className="container py-8 md:py-12 max-w-4xl mx-auto">
         <Button 
           variant="ghost" 
           onClick={() => navigate('/services')}
@@ -210,16 +210,9 @@ const ServiceCreate = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="flex items-center gap-3 mb-2">
-            <img 
-              src={swipelabLogo} 
-              alt="SwipeLab" 
-              className="h-8 dark:brightness-110 dark:contrast-110" 
-            />
-            <h1 className="font-display text-3xl font-bold">
-              {t('services.createNew')}
-            </h1>
-          </div>
+          <h1 className="font-display text-3xl font-bold">
+            {t('services.createNew')}
+          </h1>
           <p className="text-muted-foreground">
             {t('services.createDesc')}
           </p>
@@ -341,7 +334,7 @@ const ServiceCreate = () => {
                     <Label>{t('services.serviceDescription')}</Label>
                     <Textarea
                       {...register('basic_description')}
-                      placeholder="What's included..."
+                      placeholder={t('services.whatsIncluded')}
                       rows={2}
                     />
                   </div>
@@ -378,7 +371,7 @@ const ServiceCreate = () => {
                     <Label>{t('services.serviceDescription')}</Label>
                     <Textarea
                       {...register('standard_description')}
-                      placeholder="What's included..."
+                      placeholder={t('services.whatsIncluded')}
                       rows={2}
                     />
                   </div>
@@ -415,7 +408,7 @@ const ServiceCreate = () => {
                     <Label>{t('services.serviceDescription')}</Label>
                     <Textarea
                       {...register('premium_description')}
-                      placeholder="What's included..."
+                      placeholder={t('services.whatsIncluded')}
                       rows={2}
                     />
                   </div>
@@ -446,13 +439,13 @@ const ServiceCreate = () => {
               <CardTitle>{t('services.faq')} ({t('common.optional')})</CardTitle>
               <Button type="button" variant="outline" size="sm" onClick={addFaqItem}>
                 <Plus className="h-4 w-4 mr-1" />
-                Add
+                {t('common.add')}
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
               {faqItems.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-4">
-                  Click "Add" to add FAQ items
+                  {t('services.clickAddFaq')}
                 </p>
               ) : (
                 faqItems.map((item, idx) => (
@@ -469,7 +462,7 @@ const ServiceCreate = () => {
                       <Input
                         value={item.question}
                         onChange={(e) => updateFaqItem(idx, 'question', e.target.value)}
-                        placeholder="e.g., What file formats do you deliver?"
+                        placeholder={t('services.faqQuestionPlaceholder')}
                       />
                     </div>
                     <div>
@@ -477,7 +470,7 @@ const ServiceCreate = () => {
                       <Textarea
                         value={item.answer}
                         onChange={(e) => updateFaqItem(idx, 'answer', e.target.value)}
-                        placeholder="Your answer..."
+                        placeholder={t('services.faqAnswerPlaceholder')}
                         rows={2}
                       />
                     </div>

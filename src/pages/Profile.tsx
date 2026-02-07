@@ -10,13 +10,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Camera, Loader2, Save, X, Plus, MapPin, DollarSign, Sparkles } from 'lucide-react';
+import { Camera, Loader2, Save, X, Plus, MapPin, DollarSign } from 'lucide-react';
 import { toast } from 'sonner';
-import swipelabLogo from '@/assets/swipelab-logo.png';
 import { MyServicesSection } from '@/components/profile/MyServicesSection';
 
 const profileSchema = z.object({
@@ -77,7 +77,7 @@ const Profile = () => {
     if (!file || !user) return;
 
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('Avatar must be less than 2MB');
+      toast.error(t('profile.avatarMaxSize'));
       return;
     }
 
@@ -105,12 +105,12 @@ const Profile = () => {
         .eq('id', user.id);
 
       setAvatarUrl(urlWithTimestamp);
-      toast.success('Avatar updated!');
+      toast.success(t('profile.avatarUpdated'));
     } catch (error: any) {
       if (import.meta.env.DEV) {
         console.error('Avatar upload error:', error);
       }
-      toast.error('Failed to upload avatar');
+      toast.error(t('profile.avatarFailed'));
     } finally {
       setUploading(false);
     }
@@ -148,9 +148,9 @@ const Profile = () => {
     setSaving(false);
 
     if (error) {
-      toast.error('Failed to update profile');
+      toast.error(t('profile.profileFailed'));
     } else {
-      toast.success('Profile updated!');
+      toast.success(t('profile.profileUpdated'));
     }
   };
 
@@ -173,180 +173,189 @@ const Profile = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-2xl mx-auto"
+          className="max-w-2xl mx-auto space-y-8"
         >
-          <div className="flex items-center gap-3 mb-6">
-            <img 
-              src={swipelabLogo} 
-              alt="SwipeLab" 
-              className="h-8 dark:brightness-110 dark:contrast-110" 
-            />
-            <div>
-              <h1 className="font-display text-3xl font-bold">
-                {t('profile.yourProfile').split(' ')[0]} <span className="text-gradient-primary">{t('profile.yourProfile').split(' ').slice(1).join(' ')}</span>
-              </h1>
-              <p className="text-muted-foreground">
-                {t('profile.showCommunity')}
-              </p>
-            </div>
+          {/* Page Header */}
+          <div>
+            <h1 className="font-display text-3xl font-bold">
+              {t('profile.yourProfile')}
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              {t('profile.showCommunity')}
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            {/* Avatar */}
-            <div className="flex items-center gap-6">
-              <div className="relative">
-                <Avatar className="h-24 w-24 border-4 border-primary/20">
-                  <AvatarImage src={avatarUrl || undefined} />
-                  <AvatarFallback className="bg-gradient-primary text-primary-foreground text-2xl font-semibold">
-                    {user?.email?.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                  className="absolute -bottom-2 -right-2 h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 transition-colors disabled:opacity-50"
-                >
-                  {uploading ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <Camera className="h-5 w-5" />
-                  )}
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarChange}
-                  className="hidden"
-                />
-              </div>
-              <div>
-                <p className="font-medium">{t('profile.photo')}</p>
-                <p className="text-sm text-muted-foreground">
-                  {t('profile.photoDesc')}
-                </p>
-              </div>
-            </div>
-
-            {/* Name */}
-            <div className="space-y-2">
-              <Label htmlFor="name">{t('profile.displayName')}</Label>
-              <Input
-                {...register('name')}
-                id="name"
-                placeholder={t('auth.namePlaceholder')}
-                className="h-12"
-              />
-              {errors.name && (
-                <p className="text-sm text-destructive">{errors.name.message}</p>
-              )}
-            </div>
-
-            {/* Bio */}
-            <div className="space-y-2">
-              <Label htmlFor="bio">{t('profile.bio')}</Label>
-              <Textarea
-                {...register('bio')}
-                id="bio"
-                placeholder={t('profile.bioPlaceholder')}
-                rows={4}
-              />
-              {errors.bio && (
-                <p className="text-sm text-destructive">{errors.bio.message}</p>
-              )}
-            </div>
-
-            {/* Availability for Hire */}
-            <div className="p-4 rounded-xl bg-secondary/50 space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-base font-medium">{t('profile.availableForHire')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('profile.availableDesc')}
-                  </p>
-                </div>
-                <Switch
-                  checked={availableForHire}
-                  onCheckedChange={setAvailableForHire}
-                />
-              </div>
-
-              {availableForHire && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="location" className="flex items-center gap-1.5">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {t('profile.location')}
-                    </Label>
-                    <Input
-                      {...register('location')}
-                      id="location"
-                      placeholder="e.g., Jakarta, Indonesia"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="hourly_rate" className="flex items-center gap-1.5">
-                      <DollarSign className="h-3.5 w-3.5" />
-                      {t('profile.hourlyRate')}
-                    </Label>
-                    <Input
-                      {...register('hourly_rate')}
-                      id="hourly_rate"
-                      placeholder="e.g., 50"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Skills */}
-            <div className="space-y-4">
-              <Label>{t('profile.skills')}</Label>
-              <div className="flex flex-wrap gap-2 mb-3">
-                {skills.map((skill) => (
-                  <Badge
-                    key={skill}
-                    variant="secondary"
-                    className="px-3 py-1 text-sm flex items-center gap-1"
-                  >
-                    {skill}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Avatar Card */}
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-6">
+                  <div className="relative">
+                    <Avatar className="h-24 w-24 border-4 border-primary/20">
+                      <AvatarImage src={avatarUrl || undefined} />
+                      <AvatarFallback className="bg-gradient-primary text-primary-foreground text-2xl font-semibold">
+                        {user?.email?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     <button
                       type="button"
-                      onClick={() => removeSkill(skill)}
-                      className="ml-1 hover:text-destructive"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      className="absolute -bottom-2 -right-2 h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 transition-colors disabled:opacity-50"
                     >
-                      <X className="h-3 w-3" />
+                      {uploading ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <Camera className="h-5 w-5" />
+                      )}
                     </button>
-                  </Badge>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <Input
-                  value={newSkill}
-                  onChange={(e) => setNewSkill(e.target.value)}
-                  placeholder={t('profile.addSkill')}
-                  className="h-10"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      addSkill();
-                    }
-                  }}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={addSkill}
-                  disabled={!newSkill.trim() || skills.length >= 10}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {skills.length}/10 {t('profile.skills').toLowerCase()}
-              </p>
-            </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                      className="hidden"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-medium">{t('profile.photo')}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('profile.photoDesc')}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Basic Info Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">{t('profile.displayName')}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Input
+                    {...register('name')}
+                    id="name"
+                    placeholder={t('auth.namePlaceholder')}
+                    className="h-12"
+                  />
+                  {errors.name && (
+                    <p className="text-sm text-destructive">{errors.name.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="bio">{t('profile.bio')}</Label>
+                  <Textarea
+                    {...register('bio')}
+                    id="bio"
+                    placeholder={t('profile.bioPlaceholder')}
+                    rows={4}
+                  />
+                  {errors.bio && (
+                    <p className="text-sm text-destructive">{errors.bio.message}</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Availability Card */}
+            <Card>
+              <CardContent className="pt-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-base font-medium">{t('profile.availableForHire')}</Label>
+                    <p className="text-sm text-muted-foreground">
+                      {t('profile.availableDesc')}
+                    </p>
+                  </div>
+                  <Switch
+                    checked={availableForHire}
+                    onCheckedChange={setAvailableForHire}
+                  />
+                </div>
+
+                {availableForHire && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="location" className="flex items-center gap-1.5">
+                        <MapPin className="h-3.5 w-3.5" />
+                        {t('profile.location')}
+                      </Label>
+                      <Input
+                        {...register('location')}
+                        id="location"
+                        placeholder="e.g., Jakarta, Indonesia"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="hourly_rate" className="flex items-center gap-1.5">
+                        <DollarSign className="h-3.5 w-3.5" />
+                        {t('profile.hourlyRate')}
+                      </Label>
+                      <Input
+                        {...register('hourly_rate')}
+                        id="hourly_rate"
+                        placeholder="e.g., 50"
+                      />
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Skills Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">{t('profile.skills')}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  {skills.map((skill) => (
+                    <Badge
+                      key={skill}
+                      variant="secondary"
+                      className="px-3 py-1 text-sm flex items-center gap-1"
+                    >
+                      {skill}
+                      <button
+                        type="button"
+                        onClick={() => removeSkill(skill)}
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    value={newSkill}
+                    onChange={(e) => setNewSkill(e.target.value)}
+                    placeholder={t('profile.addSkill')}
+                    className="h-10"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addSkill();
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={addSkill}
+                    disabled={!newSkill.trim() || skills.length >= 10}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {skills.length}/10 {t('profile.skills').toLowerCase()}
+                </p>
+              </CardContent>
+            </Card>
 
             <Button
               type="submit"
@@ -367,7 +376,7 @@ const Profile = () => {
           </form>
 
           {/* My Services Section */}
-          <div className="mt-10 pt-8 border-t">
+          <div className="pt-4 border-t">
             <MyServicesSection />
           </div>
         </motion.div>

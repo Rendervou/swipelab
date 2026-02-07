@@ -165,7 +165,7 @@ const Feed = () => {
       setDesigns(prev => prev.slice(1));
 
       if (direction === 'right') {
-        toast.success('Liked! 💜');
+        toast.success(t('common.liked') + ' 💜');
       }
 
       // Show login prompt when reaching the limit
@@ -197,10 +197,10 @@ const Feed = () => {
       if (import.meta.env.DEV) {
         console.error('Error recording swipe:', error);
       }
-      toast.error('Failed to record swipe');
+      toast.error(t('feed.swipeFailed'));
       setDesigns(prev => [currentDesign, ...prev]);
     } else {
-      toast.success('Liked! 💜');
+      toast.success(t('common.liked') + ' 💜');
     }
   };
 
@@ -228,9 +228,9 @@ const Feed = () => {
       if (import.meta.env.DEV) {
         console.error('Error submitting feedback:', feedbackError);
       }
-      toast.error('Failed to submit feedback');
+      toast.error(t('feed.feedbackFailed'));
     } else {
-      toast.success('Thanks for your feedback! 📝');
+      toast.success(t('feed.feedbackThanks'));
     }
 
     // Record skip swipe
