@@ -184,9 +184,9 @@ const Dashboard = () => {
       .eq('id', designId);
 
     if (error) {
-      toast.error('Failed to delete design');
+      toast.error(t('dashboard.deleteFailed'));
     } else {
-      toast.success('Design deleted');
+      toast.success(t('dashboard.designDeleted'));
       setDesigns(prev => prev.filter(d => d.id !== designId));
     }
   };

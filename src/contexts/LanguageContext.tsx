@@ -9,7 +9,6 @@ export const languages: Record<Language, { name: string; nativeName: string; fla
   ja: { name: 'Japanese', nativeName: '日本語', flag: '🇯🇵' },
 };
 
-// Translation keys organized by category
 export const translations: Record<Language, Record<string, string>> = {
   id: {
     // Auth
@@ -49,6 +48,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'common.explore': 'Jelajahi',
     'common.getStarted': 'Mulai Sekarang',
     'common.optional': 'opsional',
+    'common.active': 'Aktif',
+    'common.draft': 'Draf',
+    'common.views': 'tayangan',
+    'common.orders': 'pesanan',
+    'common.liked': 'Disukai!',
+    'common.notFound': 'Tidak ditemukan',
+    'common.backToHome': 'Kembali ke Beranda',
+    'common.add': 'Tambah',
+    'common.noData': 'Belum ada data',
+    'common.free': 'gratis',
     
     // Hero/Landing
     'hero.tagline': 'Swipe ideas. Discover talent.',
@@ -59,7 +68,15 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.shareWork': 'Siap berbagi karyamu?',
     'hero.shareWorkDesc': 'Bergabung dengan ribuan desainer yang mendapat feedback nyata setiap hari.',
     'hero.createFreeAccount': 'Buat Akun Gratis',
-    
+    'hero.itsFree': '— gratis',
+    'hero.exploreMore': 'Jelajahi lebih banyak desain',
+    'hero.footer': '© {year} SwipeLab. Dibuat dengan ❤️ untuk desainer.',
+
+    // Sort options
+    'sort.popular': 'Populer',
+    'sort.newNoteworthy': 'Baru & Menarik',
+    'sort.following': 'Mengikuti',
+
     // Services
     'services.title': 'Jasa Desainer',
     'services.description': 'Temukan jasa desain profesional dari talenta terbaik',
@@ -79,14 +96,24 @@ export const translations: Record<Language, Record<string, string>> = {
     'services.price': 'Harga',
     'services.deliveryTime': 'Waktu Pengerjaan',
     'services.faq': 'FAQ',
-    'services.portfolio': 'Portfolio',
-    'services.testimonials': 'Testimonial',
+    'services.portfolio': 'Portofolio',
+    'services.testimonials': 'Testimoni',
     'services.basicInfo': 'Informasi Dasar',
     'services.createDesc': 'Buat jasa desain dan mulai dapatkan klien',
     'services.pricingPlans': 'Paket Harga',
     'services.addImage': 'Tambah Gambar',
     'services.question': 'Pertanyaan',
     'services.answer': 'Jawaban',
+    'services.whatsIncluded': 'Apa saja yang termasuk...',
+    'services.clickAddFaq': 'Klik "Tambah" untuk menambahkan FAQ',
+    'services.faqQuestionPlaceholder': 'Contoh: Format file apa yang dikirimkan?',
+    'services.faqAnswerPlaceholder': 'Jawaban Anda...',
+    'services.startingFrom': 'Mulai dari',
+    'services.published': 'Jasa berhasil dibuat!',
+    'services.publishFailed': 'Gagal membuat jasa',
+    'services.imageUploaded': 'Gambar berhasil diunggah',
+    'services.imageUploadFailed': 'Gagal mengunggah gambar',
+    'services.loginRequired': 'Silakan masuk terlebih dahulu',
     
     // Categories
     'category.ui_ux_design': 'UI/UX Design',
@@ -101,7 +128,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Navigation
     'nav.feed': 'Feed',
     'nav.explore': 'Jelajahi',
-    'nav.designers': 'Designer',
+    'nav.designers': 'Desainer',
     'nav.services': 'Jasa',
     'nav.upload': 'Unggah',
     'nav.dashboard': 'Dashboard',
@@ -117,7 +144,7 @@ export const translations: Record<Language, Record<string, string>> = {
     
     // Dashboard
     'dashboard.tagline': 'Swipe ideas. Discover talent.',
-    'dashboard.desc': 'Kelola desain Anda, lihat feedback dari komunitas, dan dapatkan insight AI.',
+    'dashboard.desc': 'Kelola desain, lihat feedback komunitas, dan dapatkan insight AI.',
     'dashboard.totalDesigns': 'Total Desain',
     'dashboard.likesReceived': 'Like Diterima',
     'dashboard.designsSwiped': 'Desain Di-swipe',
@@ -128,6 +155,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'dashboard.uploadFirst': 'Unggah desain pertamamu untuk memulai',
     'dashboard.noAiFeedback': 'Belum ada feedback AI',
     'dashboard.requestAi': 'Minta analisis AI pada desainmu untuk mendapat insight',
+    'dashboard.designDeleted': 'Desain dihapus',
+    'dashboard.deleteFailed': 'Gagal menghapus desain',
     
     // Upload
     'upload.title': 'Unggah Desain',
@@ -145,7 +174,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'upload.submit': 'Unggah Desain',
     
     // Designers
-    'designers.title': 'Temukan Designer',
+    'designers.title': 'Temukan Desainer',
     'designers.desc': 'Temukan desainer berbakat yang siap bekerja sama',
     'designers.searchPlaceholder': 'Cari berdasarkan nama, skill, atau lokasi...',
     'designers.availableForHire': 'Tersedia untuk Hire',
@@ -155,6 +184,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'designers.adjustFilters': 'Coba sesuaikan pencarian atau filter',
     'designers.followers': 'pengikut',
     'designers.designs': 'desain',
+    
+    // Designer Profile
+    'designerProfile.notFound': 'Desainer tidak ditemukan',
+    'designerProfile.followers': 'Pengikut',
+    'designerProfile.following': 'Mengikuti',
+    'designerProfile.likes': 'Suka',
+    'designerProfile.designs': 'Desain',
+    'designerProfile.editProfile': 'Edit Profil',
+    'designerProfile.hireMe': 'Hire Saya',
+    'designerProfile.message': 'Pesan',
+    'designerProfile.noDesigns': 'Belum ada desain',
+    'designerProfile.designCount': 'Desain ({count})',
     
     // Profile
     'profile.yourProfile': 'Profil Kamu',
@@ -175,15 +216,26 @@ export const translations: Record<Language, Record<string, string>> = {
     'profile.noServices': 'Belum ada jasa',
     'profile.createFirstService': 'Buat jasa pertamamu dan mulai dapatkan klien',
     'profile.manageServices': 'Kelola Jasa',
+    'profile.avatarUpdated': 'Avatar berhasil diperbarui!',
+    'profile.avatarFailed': 'Gagal mengunggah avatar',
+    'profile.avatarMaxSize': 'Avatar harus kurang dari 2MB',
+    'profile.profileUpdated': 'Profil berhasil diperbarui!',
+    'profile.profileFailed': 'Gagal memperbarui profil',
     
     // Feed
     'feed.guestViewing': 'Kamu sedang melihat sebagai tamu',
     'feed.guestSwipes': 'Sisa {count} swipe gratis. Login untuk swipe tanpa batas!',
     'feed.limitReached': 'Kamu sudah mencapai batas swipe. Login untuk melanjutkan!',
     'feed.designsLeft': '{count} desain tersisa untuk dijelajahi',
-    'feed.youLikeDesigns': 'Kamu suka design-design ini!',
-    'feed.swipedLimit': 'Kamu sudah swipe {count} design. Untuk melanjutkan, silakan login atau buat akun gratis.',
+    'feed.youLikeDesigns': 'Kamu suka desain-desain ini!',
+    'feed.swipedLimit': 'Kamu sudah swipe {count} desain. Untuk melanjutkan, silakan login atau buat akun gratis.',
     'feed.unlimitedSwipes': 'Swipe tanpa batas & simpan favoritmu!',
+    'feed.maybeLater': 'Nanti saja',
+    'feed.registerFree': 'Daftar Gratis',
+    'feed.feedbackThanks': 'Terima kasih atas feedbackmu! 📝',
+    'feed.feedbackFailed': 'Gagal mengirim feedback',
+    'feed.swipeFailed': 'Gagal merekam swipe',
+    
     // Bookmarks
     'bookmarks.title': 'Desain Tersimpan',
     'bookmarks.description': 'Desain yang kamu simpan untuk inspirasi',
@@ -213,9 +265,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'ai.uploadPrompt': 'Unggah desain dan ajukan pertanyaan untuk memulai',
     'ai.inputPlaceholder': 'Tanyakan tentang warna, layout, perbaikan, atau minta variasi desain...',
     'ai.analyzing': 'Menganalisis desain...',
-    
-    'feed.maybeLater': 'Nanti saja',
-    'feed.registerFree': 'Daftar Gratis',
   },
   en: {
     // Auth
@@ -255,6 +304,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'common.explore': 'Explore',
     'common.getStarted': 'Get Started',
     'common.optional': 'optional',
+    'common.active': 'Active',
+    'common.draft': 'Draft',
+    'common.views': 'views',
+    'common.orders': 'orders',
+    'common.liked': 'Liked!',
+    'common.notFound': 'Not found',
+    'common.backToHome': 'Back to Home',
+    'common.add': 'Add',
+    'common.noData': 'No data yet',
+    'common.free': 'free',
     
     // Hero/Landing
     'hero.tagline': 'Swipe ideas. Discover talent.',
@@ -265,7 +324,15 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.shareWork': 'Ready to share your work?',
     'hero.shareWorkDesc': 'Join thousands of designers getting real feedback every day.',
     'hero.createFreeAccount': 'Create Free Account',
-    
+    'hero.itsFree': '— it\'s free',
+    'hero.exploreMore': 'Explore more designs',
+    'hero.footer': '© {year} SwipeLab. Made with ❤️ for designers.',
+
+    // Sort options
+    'sort.popular': 'Popular',
+    'sort.newNoteworthy': 'New & Noteworthy',
+    'sort.following': 'Following',
+
     // Services
     'services.title': 'Designer Services',
     'services.description': 'Find professional design services from top talent',
@@ -293,6 +360,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'services.addImage': 'Add Image',
     'services.question': 'Question',
     'services.answer': 'Answer',
+    'services.whatsIncluded': 'What\'s included...',
+    'services.clickAddFaq': 'Click "Add" to add FAQ items',
+    'services.faqQuestionPlaceholder': 'e.g., What file formats do you deliver?',
+    'services.faqAnswerPlaceholder': 'Your answer...',
+    'services.startingFrom': 'Starting from',
+    'services.published': 'Service created successfully!',
+    'services.publishFailed': 'Failed to create service',
+    'services.imageUploaded': 'Image uploaded',
+    'services.imageUploadFailed': 'Failed to upload image',
+    'services.loginRequired': 'Please login first',
     
     // Categories
     'category.ui_ux_design': 'UI/UX Design',
@@ -334,6 +411,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'dashboard.uploadFirst': 'Upload your first design to get started',
     'dashboard.noAiFeedback': 'No AI feedback yet',
     'dashboard.requestAi': 'Request AI analysis on your designs to get insights',
+    'dashboard.designDeleted': 'Design deleted',
+    'dashboard.deleteFailed': 'Failed to delete design',
     
     // Upload
     'upload.title': 'Upload a Design',
@@ -362,6 +441,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'designers.followers': 'followers',
     'designers.designs': 'designs',
     
+    // Designer Profile
+    'designerProfile.notFound': 'Designer not found',
+    'designerProfile.followers': 'Followers',
+    'designerProfile.following': 'Following',
+    'designerProfile.likes': 'Likes',
+    'designerProfile.designs': 'Designs',
+    'designerProfile.editProfile': 'Edit Profile',
+    'designerProfile.hireMe': 'Hire Me',
+    'designerProfile.message': 'Message',
+    'designerProfile.noDesigns': 'No designs yet',
+    'designerProfile.designCount': 'Designs ({count})',
+    
     // Profile
     'profile.yourProfile': 'Your Profile',
     'profile.showCommunity': 'Show yourself to the SwipeLab community',
@@ -381,6 +472,11 @@ export const translations: Record<Language, Record<string, string>> = {
     'profile.noServices': 'No services yet',
     'profile.createFirstService': 'Create your first service and start getting clients',
     'profile.manageServices': 'Manage Services',
+    'profile.avatarUpdated': 'Avatar updated!',
+    'profile.avatarFailed': 'Failed to upload avatar',
+    'profile.avatarMaxSize': 'Avatar must be less than 2MB',
+    'profile.profileUpdated': 'Profile updated!',
+    'profile.profileFailed': 'Failed to update profile',
     
     // Feed
     'feed.guestViewing': 'You\'re viewing as a guest',
@@ -390,6 +486,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'feed.youLikeDesigns': 'You like these designs!',
     'feed.swipedLimit': 'You\'ve swiped {count} designs. To continue, please login or create a free account.',
     'feed.unlimitedSwipes': 'Unlimited swipes & save your favorites!',
+    'feed.maybeLater': 'Maybe later',
+    'feed.registerFree': 'Register Free',
+    'feed.feedbackThanks': 'Thanks for your feedback! 📝',
+    'feed.feedbackFailed': 'Failed to submit feedback',
+    'feed.swipeFailed': 'Failed to record swipe',
+    
     // Bookmarks
     'bookmarks.title': 'Saved Designs',
     'bookmarks.description': 'Your bookmarked designs for inspiration',
@@ -419,9 +521,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'ai.uploadPrompt': 'Upload a design and ask a question to get started',
     'ai.inputPlaceholder': 'Ask about colors, layout, improvements, or request design variations...',
     'ai.analyzing': 'Analyzing design...',
-    
-    'feed.maybeLater': 'Maybe later',
-    'feed.registerFree': 'Register Free',
   },
   zh: {
     // Auth
@@ -461,6 +560,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'common.explore': '探索',
     'common.getStarted': '开始使用',
     'common.optional': '可选',
+    'common.active': '活跃',
+    'common.draft': '草稿',
+    'common.views': '浏览',
+    'common.orders': '订单',
+    'common.liked': '已喜欢！',
+    'common.notFound': '未找到',
+    'common.backToHome': '返回首页',
+    'common.add': '添加',
+    'common.noData': '暂无数据',
+    'common.free': '免费',
     
     // Hero/Landing
     'hero.tagline': '滑动创意。发现人才。',
@@ -471,7 +580,15 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.shareWork': '准备分享您的作品了吗？',
     'hero.shareWorkDesc': '加入每天获得真实反馈的数千名设计师。',
     'hero.createFreeAccount': '创建免费账户',
-    
+    'hero.itsFree': '— 免费',
+    'hero.exploreMore': '探索更多设计',
+    'hero.footer': '© {year} SwipeLab。为设计师用 ❤️ 打造。',
+
+    // Sort options
+    'sort.popular': '热门',
+    'sort.newNoteworthy': '最新推荐',
+    'sort.following': '关注',
+
     // Services
     'services.title': '设计师服务',
     'services.description': '寻找顶尖人才的专业设计服务',
@@ -499,6 +616,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'services.addImage': '添加图片',
     'services.question': '问题',
     'services.answer': '答案',
+    'services.whatsIncluded': '包含内容...',
+    'services.clickAddFaq': '点击"添加"来添加常见问题',
+    'services.faqQuestionPlaceholder': '例如：交付什么格式的文件？',
+    'services.faqAnswerPlaceholder': '您的回答...',
+    'services.startingFrom': '起始价',
+    'services.published': '服务创建成功！',
+    'services.publishFailed': '创建服务失败',
+    'services.imageUploaded': '图片上传成功',
+    'services.imageUploadFailed': '图片上传失败',
+    'services.loginRequired': '请先登录',
     
     // Categories
     'category.ui_ux_design': 'UI/UX 设计',
@@ -540,6 +667,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'dashboard.uploadFirst': '上传您的第一个设计开始',
     'dashboard.noAiFeedback': '暂无AI反馈',
     'dashboard.requestAi': '请求对您的设计进行AI分析以获取洞察',
+    'dashboard.designDeleted': '设计已删除',
+    'dashboard.deleteFailed': '删除设计失败',
     
     // Upload
     'upload.title': '上传设计',
@@ -568,6 +697,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'designers.followers': '粉丝',
     'designers.designs': '设计',
     
+    // Designer Profile
+    'designerProfile.notFound': '未找到设计师',
+    'designerProfile.followers': '粉丝',
+    'designerProfile.following': '关注',
+    'designerProfile.likes': '喜欢',
+    'designerProfile.designs': '设计',
+    'designerProfile.editProfile': '编辑资料',
+    'designerProfile.hireMe': '雇用我',
+    'designerProfile.message': '发消息',
+    'designerProfile.noDesigns': '暂无设计',
+    'designerProfile.designCount': '设计 ({count})',
+    
     // Profile
     'profile.yourProfile': '您的资料',
     'profile.showCommunity': '向SwipeLab社区展示自己',
@@ -587,6 +728,11 @@ export const translations: Record<Language, Record<string, string>> = {
     'profile.noServices': '暂无服务',
     'profile.createFirstService': '创建您的第一个服务并开始获取客户',
     'profile.manageServices': '管理服务',
+    'profile.avatarUpdated': '头像更新成功！',
+    'profile.avatarFailed': '头像上传失败',
+    'profile.avatarMaxSize': '头像必须小于2MB',
+    'profile.profileUpdated': '资料更新成功！',
+    'profile.profileFailed': '更新资料失败',
     
     // Feed
     'feed.guestViewing': '您正在以访客身份浏览',
@@ -596,6 +742,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'feed.youLikeDesigns': '您喜欢这些设计！',
     'feed.swipedLimit': '您已滑动{count}个设计。请登录或创建免费账户以继续。',
     'feed.unlimitedSwipes': '无限滑动并保存您的收藏！',
+    'feed.maybeLater': '稍后再说',
+    'feed.registerFree': '免费注册',
+    'feed.feedbackThanks': '感谢您的反馈！📝',
+    'feed.feedbackFailed': '提交反馈失败',
+    'feed.swipeFailed': '记录滑动失败',
+    
     // Bookmarks
     'bookmarks.title': '已保存设计',
     'bookmarks.description': '您收藏的设计灵感',
@@ -623,11 +775,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'ai.variations': '变体',
     'ai.variationsDesc': '建议设计变体',
     'ai.uploadPrompt': '上传设计并提问以开始',
-    'ai.inputPlaceholder': '询问颜色、布局、改进或请求设计变体...',
+    'ai.inputPlaceholder': '询问颜色、布局、改进点或请求设计变体...',
     'ai.analyzing': '正在分析设计...',
-    
-    'feed.maybeLater': '稍后再说',
-    'feed.registerFree': '免费注册',
   },
   ja: {
     // Auth
@@ -667,6 +816,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'common.explore': '探索',
     'common.getStarted': '始める',
     'common.optional': '任意',
+    'common.active': 'アクティブ',
+    'common.draft': '下書き',
+    'common.views': '閲覧',
+    'common.orders': '注文',
+    'common.liked': 'いいね！',
+    'common.notFound': '見つかりません',
+    'common.backToHome': 'ホームに戻る',
+    'common.add': '追加',
+    'common.noData': 'データがありません',
+    'common.free': '無料',
     
     // Hero/Landing
     'hero.tagline': 'アイデアをスワイプ。才能を発見。',
@@ -677,7 +836,15 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.shareWork': '作品を共有する準備はできましたか？',
     'hero.shareWorkDesc': '毎日リアルなフィードバックを得ている数千人のデザイナーに参加しましょう。',
     'hero.createFreeAccount': '無料アカウント作成',
-    
+    'hero.itsFree': '— 無料',
+    'hero.exploreMore': 'もっとデザインを探索',
+    'hero.footer': '© {year} SwipeLab。デザイナーのために ❤️ で作られました。',
+
+    // Sort options
+    'sort.popular': '人気',
+    'sort.newNoteworthy': '新着＆注目',
+    'sort.following': 'フォロー中',
+
     // Services
     'services.title': 'デザイナーサービス',
     'services.description': 'トップタレントのプロフェッショナルデザインサービスを見つける',
@@ -705,6 +872,16 @@ export const translations: Record<Language, Record<string, string>> = {
     'services.addImage': '画像を追加',
     'services.question': '質問',
     'services.answer': '回答',
+    'services.whatsIncluded': '含まれるもの...',
+    'services.clickAddFaq': '「追加」をクリックしてFAQを追加',
+    'services.faqQuestionPlaceholder': '例：どのファイル形式で納品しますか？',
+    'services.faqAnswerPlaceholder': '回答を入力...',
+    'services.startingFrom': '〜から',
+    'services.published': 'サービスが作成されました！',
+    'services.publishFailed': 'サービスの作成に失敗しました',
+    'services.imageUploaded': '画像がアップロードされました',
+    'services.imageUploadFailed': '画像のアップロードに失敗しました',
+    'services.loginRequired': 'まずログインしてください',
     
     // Categories
     'category.ui_ux_design': 'UI/UXデザイン',
@@ -746,6 +923,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'dashboard.uploadFirst': '最初のデザインをアップロードして始めましょう',
     'dashboard.noAiFeedback': 'AIフィードバックがまだありません',
     'dashboard.requestAi': 'デザインのAI分析をリクエストして洞察を得ましょう',
+    'dashboard.designDeleted': 'デザインが削除されました',
+    'dashboard.deleteFailed': 'デザインの削除に失敗しました',
     
     // Upload
     'upload.title': 'デザインをアップロード',
@@ -774,6 +953,18 @@ export const translations: Record<Language, Record<string, string>> = {
     'designers.followers': 'フォロワー',
     'designers.designs': 'デザイン',
     
+    // Designer Profile
+    'designerProfile.notFound': 'デザイナーが見つかりません',
+    'designerProfile.followers': 'フォロワー',
+    'designerProfile.following': 'フォロー中',
+    'designerProfile.likes': 'いいね',
+    'designerProfile.designs': 'デザイン',
+    'designerProfile.editProfile': 'プロフィール編集',
+    'designerProfile.hireMe': '採用する',
+    'designerProfile.message': 'メッセージ',
+    'designerProfile.noDesigns': 'まだデザインがありません',
+    'designerProfile.designCount': 'デザイン ({count})',
+    
     // Profile
     'profile.yourProfile': 'あなたのプロフィール',
     'profile.showCommunity': 'SwipeLabコミュニティに自分をアピールしましょう',
@@ -793,6 +984,11 @@ export const translations: Record<Language, Record<string, string>> = {
     'profile.noServices': 'サービスがありません',
     'profile.createFirstService': '最初のサービスを作成してクライアントを獲得しましょう',
     'profile.manageServices': 'サービス管理',
+    'profile.avatarUpdated': 'アバターが更新されました！',
+    'profile.avatarFailed': 'アバターのアップロードに失敗しました',
+    'profile.avatarMaxSize': 'アバターは2MB以下にしてください',
+    'profile.profileUpdated': 'プロフィールが更新されました！',
+    'profile.profileFailed': 'プロフィールの更新に失敗しました',
     
     // Feed
     'feed.guestViewing': 'ゲストとして閲覧中です',
@@ -802,6 +998,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'feed.youLikeDesigns': 'これらのデザインがお気に入りですね！',
     'feed.swipedLimit': '{count}件のデザインをスワイプしました。続けるにはログインまたは無料アカウントを作成してください。',
     'feed.unlimitedSwipes': '無制限スワイプ＆お気に入りを保存！',
+    'feed.maybeLater': '後で',
+    'feed.registerFree': '無料登録',
+    'feed.feedbackThanks': 'フィードバックありがとうございます！📝',
+    'feed.feedbackFailed': 'フィードバックの送信に失敗しました',
+    'feed.swipeFailed': 'スワイプの記録に失敗しました',
+    
     // Bookmarks
     'bookmarks.title': '保存したデザイン',
     'bookmarks.description': 'インスピレーションのためにブックマークしたデザイン',
@@ -831,9 +1033,6 @@ export const translations: Record<Language, Record<string, string>> = {
     'ai.uploadPrompt': 'デザインをアップロードして質問してください',
     'ai.inputPlaceholder': '色、レイアウト、改善点について質問、またはバリエーションをリクエスト...',
     'ai.analyzing': 'デザインを分析中...',
-    
-    'feed.maybeLater': '後で',
-    'feed.registerFree': '無料登録',
   },
 };
 

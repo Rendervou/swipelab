@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Filter, ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -19,35 +19,37 @@ const Index = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState('all');
-  const [sortBy, setSortBy] = useState('Popular');
+  const [sortBy, setSortBy] = useState('popular');
 
   const categories = [
-    { value: 'all', label: t('common.explore') },
+    { value: 'all', label: t('common.all') },
     { value: 'ui_ux', label: 'UI/UX' },
     { value: 'poster', label: 'Poster' },
     { value: 'illustration', label: t('category.illustration') },
   ];
 
-  const navCategories = [
-    'Animation', 'Branding', 'Illustration', 'Mobile', 'Print', 
-    'Product Design', 'Typography', 'Web Design'
+  const sortOptions = [
+    { value: 'popular', label: t('sort.popular') },
+    { value: 'new', label: t('sort.newNoteworthy') },
+    { value: 'following', label: t('sort.following') },
   ];
+
+  const currentSort = sortOptions.find(s => s.value === sortBy)?.label || t('sort.popular');
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
-      {/* Hero Section - Compact */}
+      {/* Hero Section */}
       <section className="border-b bg-gradient-to-b from-secondary/30 to-background">
-        <div className="container py-8 md:py-12">
+        <div className="container py-10 md:py-14">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center"
+            className="text-center max-w-3xl mx-auto"
           >
             <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
-              {t('hero.explorePortfolio').split('design portfolio')[0]}
-              <span className="text-gradient-primary">design portfolio</span>
+              {t('hero.explorePortfolio')}
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground md:text-lg">
               {t('hero.exploreDesc')}
@@ -58,11 +60,11 @@ const Index = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="mt-6 flex items-center justify-center gap-3"
+                className="mt-6"
               >
                 <Link to="/register">
-                  <Button variant="gradient" size="lg">
-                    {t('common.getStarted')} — it's free
+                  <Button variant="gradient" size="lg" className="gap-2">
+                    {t('common.getStarted')} {t('hero.itsFree')}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
@@ -73,33 +75,27 @@ const Index = () => {
       </section>
 
       {/* Category Navigation */}
-      <section className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b">
+      <section className="sticky top-14 md:top-16 z-40 bg-background/95 backdrop-blur border-b">
         <div className="container">
-          <div className="flex items-center gap-2 py-4 overflow-x-auto scrollbar-hide">
-            {/* Sort dropdown */}
+          <div className="flex items-center gap-3 py-3 overflow-x-auto scrollbar-hide">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="shrink-0 gap-2">
-                  {sortBy}
-                  <ChevronDown className="h-4 w-4" />
+                <Button variant="outline" size="sm" className="shrink-0 gap-2">
+                  {currentSort}
+                  <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setSortBy('Popular')}>
-                  Popular
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortBy('New & Noteworthy')}>
-                  New & Noteworthy
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortBy('Following')}>
-                  Following
-                </DropdownMenuItem>
+                {sortOptions.map((option) => (
+                  <DropdownMenuItem key={option.value} onClick={() => setSortBy(option.value)}>
+                    {option.label}
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <div className="h-6 w-px bg-border shrink-0" />
+            <div className="h-5 w-px bg-border shrink-0" />
 
-            {/* Category tabs */}
             <div className="flex items-center gap-1">
               {categories.map((cat) => (
                 <Button
@@ -112,27 +108,7 @@ const Index = () => {
                   {cat.label}
                 </Button>
               ))}
-              
-              {/* Additional category links (hidden on mobile) */}
-              <div className="hidden lg:flex items-center gap-1 ml-2">
-                {navCategories.slice(0, 4).map((cat) => (
-                  <Button
-                    key={cat}
-                    variant="ghost"
-                    size="sm"
-                    className="shrink-0 text-muted-foreground hover:text-foreground"
-                  >
-                    {cat}
-                  </Button>
-                ))}
-              </div>
             </div>
-
-            {/* Filters button */}
-            <Button variant="outline" className="ml-auto shrink-0 gap-2">
-              <Filter className="h-4 w-4" />
-              {t('common.filter')}
-            </Button>
           </div>
         </div>
       </section>
@@ -142,11 +118,10 @@ const Index = () => {
         <div className="container">
           <DesignGrid category={activeCategory} limit={16} />
           
-          {/* Load More */}
           <div className="mt-12 text-center">
             <Link to="/feed">
               <Button variant="outline" size="lg" className="gap-2">
-                {t('common.explore')} more designs
+                {t('hero.exploreMore')}
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
@@ -154,7 +129,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section for non-logged in users */}
+      {/* CTA Section */}
       {!user && (
         <section className="py-16 border-t">
           <div className="container">
@@ -170,19 +145,19 @@ const Index = () => {
               <div className="relative">
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <img src={swipelabLogo} alt="SwipeLab" className="h-10 brightness-0 invert opacity-90" />
-                  <span className="font-display text-2xl font-bold text-white">SwipeLab</span>
+                  <span className="font-display text-2xl font-bold text-primary-foreground">SwipeLab</span>
                 </div>
-                <h2 className="font-display text-2xl font-bold text-white md:text-4xl">
+                <h2 className="font-display text-2xl font-bold text-primary-foreground md:text-4xl">
                   {t('hero.shareWork')}
                 </h2>
-                <p className="mx-auto mt-3 max-w-xl text-white/80">
+                <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">
                   {t('hero.shareWorkDesc')}
                 </p>
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
                   <Link to="/register">
                     <Button 
                       size="lg" 
-                      className="bg-white text-foreground hover:bg-white/90"
+                      className="bg-background text-foreground hover:bg-background/90"
                     >
                       {t('hero.createFreeAccount')}
                       <ArrowRight className="h-4 w-4" />
@@ -192,7 +167,7 @@ const Index = () => {
                     <Button 
                       variant="outline" 
                       size="lg"
-                      className="border-white/30 text-white hover:bg-white/10"
+                      className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
                     >
                       {t('auth.signIn')}
                     </Button>
@@ -212,7 +187,7 @@ const Index = () => {
             <span className="font-display text-lg font-bold text-gradient-primary">SwipeLab</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            © 2024 SwipeLab. Made with ❤️ for designers.
+            {t('hero.footer').replace('{year}', new Date().getFullYear().toString())}
           </p>
         </div>
       </footer>
