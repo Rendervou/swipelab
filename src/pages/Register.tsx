@@ -44,7 +44,7 @@ const Register = () => {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success('Welcome to SwipeLab!');
+      toast.success(t('register.welcomeToast') + ' 🎉');
       navigate('/feed');
     }
   };
@@ -71,10 +71,10 @@ const Register = () => {
             <span className="font-display text-3xl font-bold text-white">SwipeLab</span>
           </div>
           <h2 className="font-display text-3xl font-bold mb-4">
-            Your Design Journey Starts Here
+            {t('register.decorativeTitle')}
           </h2>
           <p className="text-muted-foreground max-w-sm">
-            Share your work, discover inspiration, and grow with AI-powered feedback
+            {t('register.decorativeDesc')}
           </p>
         </motion.div>
       </div>

@@ -80,7 +80,7 @@ const AIAssistant = () => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      toast.error('Please upload an image file');
+      toast.error(t('ai.imageOnly'));
       return;
     }
 
@@ -94,7 +94,7 @@ const AIAssistant = () => {
 
   const analyzeDesign = async (type: AnalysisType) => {
     if (!uploadedImage) {
-      toast.error('Please upload a design first');
+      toast.error(t('ai.uploadFirst'));
       return;
     }
 
@@ -119,10 +119,10 @@ const AIAssistant = () => {
       }
 
       setAnalysisResult(data.result);
-      toast.success('Analysis complete!');
+      toast.success(t('ai.analysisComplete'));
     } catch (error) {
-      console.error('Analysis error:', error);
-      toast.error('Failed to analyze design. Please try again.');
+      if (import.meta.env.DEV) console.error('Analysis error:', error);
+      toast.error(t('ai.analysisFailed'));
     } finally {
       setIsAnalyzing(false);
     }
