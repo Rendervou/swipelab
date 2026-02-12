@@ -62,7 +62,7 @@ const Designers = () => {
     const { data: profilesData, error } = await query;
 
     if (error) {
-      console.error('Error fetching designers:', error);
+      if (import.meta.env.DEV) console.error('Error fetching designers:', error);
       setLoading(false);
       return;
     }

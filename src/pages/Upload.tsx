@@ -41,7 +41,7 @@ const Upload = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('Image must be less than 5MB');
+        toast.error(t('upload.maxSizeError'));
         return;
       }
       
@@ -64,7 +64,7 @@ const Upload = () => {
 
   const onSubmit = async (data: UploadForm) => {
     if (!user || !imageFile) {
-      toast.error('Please select an image to upload');
+      toast.error(t('upload.selectImage'));
       return;
     }
 
@@ -97,13 +97,13 @@ const Upload = () => {
 
       if (insertError) throw insertError;
 
-      toast.success('Design uploaded successfully!');
+      toast.success(t('upload.success'));
       navigate('/dashboard');
     } catch (error: any) {
       if (import.meta.env.DEV) {
         console.error('Upload error:', error);
       }
-      toast.error(error.message || 'Failed to upload design');
+      toast.error(error.message || t('upload.failed'));
     } finally {
       setLoading(false);
     }

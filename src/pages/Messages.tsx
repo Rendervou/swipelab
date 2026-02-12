@@ -230,8 +230,8 @@ const Messages = () => {
 
       setNewMessage('');
     } catch (error: any) {
-      console.error('Error sending message:', error);
-      toast.error('Failed to send message');
+      if (import.meta.env.DEV) console.error('Error sending message:', error);
+      toast.error(t('messages.sendFailed'));
     } finally {
       setSending(false);
     }

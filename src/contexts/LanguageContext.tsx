@@ -265,6 +265,30 @@ export const translations: Record<Language, Record<string, string>> = {
     'ai.uploadPrompt': 'Unggah desain dan ajukan pertanyaan untuk memulai',
     'ai.inputPlaceholder': 'Tanyakan tentang warna, layout, perbaikan, atau minta variasi desain...',
     'ai.analyzing': 'Menganalisis desain...',
+    'ai.uploadFirst': 'Unggah desain terlebih dahulu',
+    'ai.imageOnly': 'Harap unggah file gambar',
+    'ai.analysisFailed': 'Gagal menganalisis desain. Silakan coba lagi.',
+    'ai.analysisComplete': 'Analisis selesai!',
+
+    // Upload extras
+    'upload.maxSizeError': 'Gambar harus kurang dari 5MB',
+    'upload.selectImage': 'Silakan pilih gambar untuk diunggah',
+    'upload.success': 'Desain berhasil diunggah!',
+    'upload.failed': 'Gagal mengunggah desain',
+
+    // Messages extras
+    'messages.sendFailed': 'Gagal mengirim pesan',
+
+    // Login/Register decorative
+    'login.decorativeTitle': 'Swipe, Rate, Create',
+    'login.decorativeDesc': 'Bergabung dengan ribuan desainer yang berbagi karya dan mendapat feedback berharga',
+    'register.decorativeTitle': 'Perjalanan Desainmu Dimulai di Sini',
+    'register.decorativeDesc': 'Bagikan karyamu, temukan inspirasi, dan berkembang dengan feedback AI',
+    'register.welcomeToast': 'Selamat datang di SwipeLab',
+
+    // NotFound
+    'notFound.title': 'Halaman Tidak Ditemukan',
+    'notFound.description': 'Halaman yang kamu cari tidak ada atau sudah dipindahkan.',
   },
   en: {
     // Auth
@@ -521,6 +545,26 @@ export const translations: Record<Language, Record<string, string>> = {
     'ai.uploadPrompt': 'Upload a design and ask a question to get started',
     'ai.inputPlaceholder': 'Ask about colors, layout, improvements, or request design variations...',
     'ai.analyzing': 'Analyzing design...',
+    'ai.uploadFirst': 'Please upload a design first',
+    'ai.imageOnly': 'Please upload an image file',
+    'ai.analysisFailed': 'Failed to analyze design. Please try again.',
+    'ai.analysisComplete': 'Analysis complete!',
+
+    'upload.maxSizeError': 'Image must be less than 5MB',
+    'upload.selectImage': 'Please select an image to upload',
+    'upload.success': 'Design uploaded successfully!',
+    'upload.failed': 'Failed to upload design',
+
+    'messages.sendFailed': 'Failed to send message',
+
+    'login.decorativeTitle': 'Swipe, Rate, Create',
+    'login.decorativeDesc': 'Join thousands of designers sharing work and getting valuable feedback',
+    'register.decorativeTitle': 'Your Design Journey Starts Here',
+    'register.decorativeDesc': 'Share your work, discover inspiration, and grow with AI-powered feedback',
+    'register.welcomeToast': 'Welcome to SwipeLab',
+
+    'notFound.title': 'Page Not Found',
+    'notFound.description': 'The page you\'re looking for doesn\'t exist or has been moved.',
   },
   zh: {
     // Auth
@@ -777,6 +821,26 @@ export const translations: Record<Language, Record<string, string>> = {
     'ai.uploadPrompt': '上传设计并提问以开始',
     'ai.inputPlaceholder': '询问颜色、布局、改进点或请求设计变体...',
     'ai.analyzing': '正在分析设计...',
+    'ai.uploadFirst': '请先上传一个设计',
+    'ai.imageOnly': '请上传图片文件',
+    'ai.analysisFailed': '分析设计失败，请重试。',
+    'ai.analysisComplete': '分析完成！',
+
+    'upload.maxSizeError': '图片必须小于5MB',
+    'upload.selectImage': '请选择要上传的图片',
+    'upload.success': '设计上传成功！',
+    'upload.failed': '上传设计失败',
+
+    'messages.sendFailed': '发送消息失败',
+
+    'login.decorativeTitle': '滑动、评分、创作',
+    'login.decorativeDesc': '加入数千名设计师，分享作品并获得宝贵反馈',
+    'register.decorativeTitle': '您的设计之旅从这里开始',
+    'register.decorativeDesc': '分享作品、发现灵感，借助AI反馈成长',
+    'register.welcomeToast': '欢迎来到SwipeLab',
+
+    'notFound.title': '页面未找到',
+    'notFound.description': '您要找的页面不存在或已被移动。',
   },
   ja: {
     // Auth
@@ -1033,6 +1097,26 @@ export const translations: Record<Language, Record<string, string>> = {
     'ai.uploadPrompt': 'デザインをアップロードして質問してください',
     'ai.inputPlaceholder': '色、レイアウト、改善点について質問、またはバリエーションをリクエスト...',
     'ai.analyzing': 'デザインを分析中...',
+    'ai.uploadFirst': 'まずデザインをアップロードしてください',
+    'ai.imageOnly': '画像ファイルをアップロードしてください',
+    'ai.analysisFailed': 'デザインの分析に失敗しました。もう一度お試しください。',
+    'ai.analysisComplete': '分析完了！',
+
+    'upload.maxSizeError': '画像は5MB以下にしてください',
+    'upload.selectImage': 'アップロードする画像を選択してください',
+    'upload.success': 'デザインが正常にアップロードされました！',
+    'upload.failed': 'デザインのアップロードに失敗しました',
+
+    'messages.sendFailed': 'メッセージの送信に失敗しました',
+
+    'login.decorativeTitle': 'スワイプ、評価、作成',
+    'login.decorativeDesc': '数千人のデザイナーと共に作品を共有し、貴重なフィードバックを得ましょう',
+    'register.decorativeTitle': 'あなたのデザインの旅がここから始まる',
+    'register.decorativeDesc': '作品を共有し、インスピレーションを発見し、AIフィードバックで成長しましょう',
+    'register.welcomeToast': 'SwipeLabへようこそ',
+
+    'notFound.title': 'ページが見つかりません',
+    'notFound.description': 'お探しのページは存在しないか、移動されました。',
   },
 };
 
