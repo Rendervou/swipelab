@@ -6,10 +6,37 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface AnalysisRequest {
-  imageUrl: string;
-  analysisType: "general" | "colors" | "layout" | "variations";
-  customPrompt?: string;
+const ALLOWED_ANALYSIS_TYPES = ["general", "colors", "layout", "variations"] as const;
+type AnalysisType = typeof ALLOWED_ANALYSIS_TYPES[number];
+
+const RATE_LIMIT_MAX = 10; // max requests per hour
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+function validateInput(body: unknown): { imageUrl: string; analysisType: AnalysisType; customPrompt?: string } | string {
+  if (!body || typeof body !== "object") return "Invalid request body";
+  const { imageUrl, analysisType, customPrompt } = body as Record<string, unknown>;
+
+  if (typeof imageUrl !== "string" || imageUrl.length === 0 || imageUrl.length > 2048) {
+    return "imageUrl must be a non-empty string (max 2048 chars)";
+  }
+  try {
+    const url = new URL(imageUrl);
+    if (!["http:", "https:"].includes(url.protocol)) return "imageUrl must use http or https protocol";
+  } catch {
+    return "imageUrl must be a valid URL";
+  }
+
+  if (!ALLOWED_ANALYSIS_TYPES.includes(analysisType as AnalysisType)) {
+    return `analysisType must be one of: ${ALLOWED_ANALYSIS_TYPES.join(", ")}`;
+  }
+
+  if (customPrompt !== undefined && customPrompt !== null) {
+    if (typeof customPrompt !== "string" || customPrompt.length > 500) {
+      return "customPrompt must be a string (max 500 chars)";
+    }
+  }
+
+  return { imageUrl: imageUrl as string, analysisType: analysisType as AnalysisType, customPrompt: customPrompt as string | undefined };
 }
 
 const systemPrompts: Record<string, string> = {
@@ -100,41 +127,75 @@ serve(async (req) => {
       );
     }
 
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+
     // Create Supabase client with user context
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: authHeader },
-        },
-      }
-    );
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
     // Verify user is authenticated using getClaims
     const token = authHeader.replace('Bearer ', '');
     const { data: claimsData, error: authError } = await supabaseClient.auth.getClaims(token);
     
     if (authError || !claimsData?.claims) {
-      console.error('Auth error:', authError);
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const userId = claimsData.claims.sub;
-    console.log(`Authenticated user ${userId} requesting AI analysis`);
+    const userId = claimsData.claims.sub as string;
 
-    const { imageUrl, analysisType, customPrompt }: AnalysisRequest = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    // --- Rate limiting ---
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+    const windowStart = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+
+    const { count, error: countError } = await adminClient
+      .from('rate_limits')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('function_name', 'analyze-design')
+      .gte('created_at', windowStart);
+
+    if (countError) {
+      console.error('Rate limit check error:', countError);
+    } else if ((count ?? 0) >= RATE_LIMIT_MAX) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Please try again later (max 10 requests per hour).' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    if (!imageUrl) {
-      throw new Error("Image URL is required");
+    // Record this request
+    await adminClient.from('rate_limits').insert({ user_id: userId, function_name: 'analyze-design' });
+
+    // --- Input validation ---
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON in request body' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const validationResult = validateInput(body);
+    if (typeof validationResult === "string") {
+      return new Response(
+        JSON.stringify({ error: validationResult }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { imageUrl, analysisType, customPrompt } = validationResult;
+
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
     }
 
     const systemPrompt = systemPrompts[analysisType] || systemPrompts.general;
@@ -191,12 +252,10 @@ serve(async (req) => {
     // Parse JSON from the response
     let analysisResult;
     try {
-      // Try to extract JSON from markdown code blocks if present
       const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
       const jsonStr = jsonMatch ? jsonMatch[1].trim() : content.trim();
       analysisResult = JSON.parse(jsonStr);
     } catch {
-      // If parsing fails, return raw content
       analysisResult = { raw_response: content };
     }
 
@@ -211,7 +270,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Analysis error:", error);
     return new Response(JSON.stringify({ 
-      error: error instanceof Error ? error.message : "Unknown error" 
+      error: "An internal error occurred. Please try again."
     }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
