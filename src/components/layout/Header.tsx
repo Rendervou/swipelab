@@ -58,16 +58,14 @@ export const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/70 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/50">
+    <header className="sticky top-0 z-50 w-full glass-subtle border-b border-border/40">
       <div className="container flex h-14 md:h-16 items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 flex-shrink-0 group">
-          <motion.img 
+        <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+          <img 
             src={swipelabLogo} 
             alt="SwipeLab" 
             className="h-7 md:h-8 dark:brightness-110 dark:contrast-110"
-            whileHover={{ rotate: [0, -10, 10, 0] }}
-            transition={{ duration: 0.5 }}
           />
           <span className="font-display text-lg md:text-xl font-bold text-gradient-primary hidden sm:inline">
             SwipeLab
@@ -79,18 +77,16 @@ export const Header = () => {
           <nav className="hidden lg:flex items-center gap-0.5">
             {navItems.map((item) => (
               <Link key={item.href} to={item.href}>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant={isActive(item.href) ? 'secondary' : 'ghost'}
-                    size="sm"
-                    className={`gap-1.5 text-sm rounded-full transition-all duration-200 ${
-                      isActive(item.href) ? 'shadow-sm' : ''
-                    }`}
-                  >
-                    <item.icon className="h-3.5 w-3.5" />
-                    {item.label}
-                  </Button>
-                </motion.div>
+                <Button
+                  variant={isActive(item.href) ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className={`gap-1.5 text-sm rounded-full transition-colors ${
+                    isActive(item.href) ? '' : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <item.icon className="h-3.5 w-3.5" />
+                  {item.label}
+                </Button>
               </Link>
             ))}
           </nav>
@@ -105,41 +101,39 @@ export const Header = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 md:h-9 md:w-9 rounded-full p-0">
-                    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                      <Avatar className="h-8 w-8 md:h-9 md:w-9 border-2 border-primary/20 transition-all hover:border-primary/50">
-                        <AvatarImage src={user.user_metadata?.avatar_url} />
-                        <AvatarFallback className="bg-gradient-primary text-primary-foreground font-semibold text-sm">
-                          {user.email?.charAt(0).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    </motion.div>
+                    <Avatar className="h-8 w-8 md:h-9 md:w-9 ring-2 ring-border transition-all hover:ring-primary/30">
+                      <AvatarImage src={user.user_metadata?.avatar_url} />
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold text-sm">
+                        {user.email?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     {unreadMessages > 0 && (
                       <motion.span 
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[10px] flex items-center justify-center font-medium"
+                        className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-accent text-accent-foreground text-[10px] flex items-center justify-center font-medium"
                       >
                         {unreadMessages > 9 ? '9+' : unreadMessages}
                       </motion.span>
                     )}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-60 rounded-xl">
-                  <div className="px-3 py-3 border-b">
-                    <p className="font-medium truncate">{user.user_metadata?.name || user.email}</p>
+                <DropdownMenuContent align="end" className="w-56 rounded-xl p-1">
+                  <div className="px-3 py-3 border-b border-border/50">
+                    <p className="font-medium text-sm truncate">{user.user_metadata?.name || user.email}</p>
                     <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                   </div>
-                  <div className="p-1">
-                    <DropdownMenuItem onClick={() => navigate(`/designer/${user.id}`)} className="cursor-pointer rounded-lg">
-                      <User className="mr-2 h-4 w-4" />
+                  <div className="py-1">
+                    <DropdownMenuItem onClick={() => navigate(`/designer/${user.id}`)} className="cursor-pointer rounded-lg text-sm">
+                      <User className="mr-2 h-4 w-4 text-muted-foreground" />
                       {t('nav.myProfile')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer rounded-lg">
-                      <Settings className="mr-2 h-4 w-4" />
+                    <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer rounded-lg text-sm">
+                      <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
                       {t('nav.editProfile')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/messages')} className="cursor-pointer rounded-lg">
-                      <MessageCircle className="mr-2 h-4 w-4" />
+                    <DropdownMenuItem onClick={() => navigate('/messages')} className="cursor-pointer rounded-lg text-sm">
+                      <MessageCircle className="mr-2 h-4 w-4 text-muted-foreground" />
                       {t('nav.messages')}
                       {unreadMessages > 0 && (
                         <Badge variant="destructive" className="ml-auto h-5 px-1.5 text-[10px]">
@@ -147,18 +141,18 @@ export const Header = () => {
                         </Badge>
                       )}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/bookmarks')} className="cursor-pointer rounded-lg">
-                      <Bookmark className="mr-2 h-4 w-4" />
+                    <DropdownMenuItem onClick={() => navigate('/bookmarks')} className="cursor-pointer rounded-lg text-sm">
+                      <Bookmark className="mr-2 h-4 w-4 text-muted-foreground" />
                       {t('nav.savedDesigns')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer rounded-lg">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                    <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer rounded-lg text-sm">
+                      <LayoutDashboard className="mr-2 h-4 w-4 text-muted-foreground" />
                       {t('nav.dashboard')}
                     </DropdownMenuItem>
                   </div>
                   <DropdownMenuSeparator />
-                  <div className="p-1">
-                    <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer rounded-lg">
+                  <div className="py-1">
+                    <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer rounded-lg text-sm">
                       <LogOut className="mr-2 h-4 w-4" />
                       {t('nav.logout')}
                     </DropdownMenuItem>
@@ -189,12 +183,10 @@ export const Header = () => {
           ) : (
             <div className="flex items-center gap-1.5">
               <Link to="/login">
-                <Button variant="ghost" size="sm" className="rounded-full">{t('auth.signIn')}</Button>
+                <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground hover:text-foreground">{t('auth.signIn')}</Button>
               </Link>
               <Link to="/register">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button variant="gradient" size="sm" className="rounded-full">{t('common.getStarted')}</Button>
-                </motion.div>
+                <Button variant="gradient" size="sm" className="rounded-full">{t('common.getStarted')}</Button>
               </Link>
             </div>
           )}
@@ -208,16 +200,16 @@ export const Header = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:hidden border-t bg-background overflow-hidden"
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:hidden border-t border-border/40 overflow-hidden"
           >
-            <div className="container py-4 flex flex-col gap-1">
+            <div className="container py-3 flex flex-col gap-0.5">
               {navItems.map((item, i) => (
                 <motion.div
                   key={item.href}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: i * 0.04 }}
                 >
                   <Link
                     to={item.href}
@@ -225,7 +217,9 @@ export const Header = () => {
                   >
                     <Button
                       variant={isActive(item.href) ? 'secondary' : 'ghost'}
-                      className="w-full justify-start rounded-xl"
+                      className={`w-full justify-start rounded-xl text-sm ${
+                        !isActive(item.href) ? 'text-muted-foreground' : ''
+                      }`}
                     >
                       <item.icon className="h-4 w-4" />
                       {item.label}
