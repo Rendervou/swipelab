@@ -53,7 +53,6 @@ export const Header = () => {
     { href: '/designers', label: t('nav.designers'), icon: Users },
     { href: '/services', label: t('nav.services'), icon: ShoppingBag },
     { href: '/ai-assistant', label: t('nav.aiAssistant'), icon: Wand2 },
-    { href: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
   ];
 
   // Mobile nav includes all items
