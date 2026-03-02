@@ -88,6 +88,56 @@ export type Database = {
           },
         ]
       }
+      design_annotations: {
+        Row: {
+          annotation_type: string
+          comment: string
+          created_at: string
+          design_id: string
+          height_percent: number | null
+          id: string
+          user_id: string
+          visibility: string
+          width_percent: number | null
+          x_percent: number
+          y_percent: number
+        }
+        Insert: {
+          annotation_type: string
+          comment: string
+          created_at?: string
+          design_id: string
+          height_percent?: number | null
+          id?: string
+          user_id: string
+          visibility?: string
+          width_percent?: number | null
+          x_percent: number
+          y_percent: number
+        }
+        Update: {
+          annotation_type?: string
+          comment?: string
+          created_at?: string
+          design_id?: string
+          height_percent?: number | null
+          id?: string
+          user_id?: string
+          visibility?: string
+          width_percent?: number | null
+          x_percent?: number
+          y_percent?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "design_annotations_design_id_fkey"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "designs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       design_feedback: {
         Row: {
           color_harmony: number

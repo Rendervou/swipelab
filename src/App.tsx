@@ -22,6 +22,7 @@ import Bookmarks from "./pages/Bookmarks";
 import Services from "./pages/Services";
 import ServiceDetail from "./pages/ServiceDetail";
 import ServiceCreate from "./pages/ServiceCreate";
+import DesignDetail from "./pages/DesignDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
                 <Route path="/bookmarks" element={<ProtectedRoute><Bookmarks /></ProtectedRoute>} />
+                <Route path="/design/:id" element={<DesignDetail />} />
                 <Route path="/ai-assistant" element={<AIAssistant />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
