@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { Heart, Eye } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BookmarkButton } from '@/components/designer/BookmarkButton';
@@ -134,31 +134,33 @@ export const DesignGrid = ({ limit = 12, category }: DesignGridProps) => {
           onMouseLeave={() => setHoveredId(null)}
         >
           {/* Image container */}
-          <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
-            <img
-              src={design.image_url}
-              alt={design.title}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              loading="lazy"
-            />
-            
-            {/* Overlay on hover */}
-            <motion.div
-              initial={false}
-              animate={{ opacity: hoveredId === design.id ? 1 : 0 }}
-              className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end justify-between p-4"
-            >
-              <h3 className="text-white font-medium text-sm truncate flex-1 mr-2">
-                {design.title}
-              </h3>
-              <div className="flex items-center gap-2">
-                <BookmarkButton 
-                  designId={design.id}
-                  className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors backdrop-blur-sm text-white"
-                />
-              </div>
-            </motion.div>
-          </div>
+          <Link to={`/design/${design.id}`} className="block">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+              <img
+                src={design.image_url}
+                alt={design.title}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+              
+              {/* Overlay on hover */}
+              <motion.div
+                initial={false}
+                animate={{ opacity: hoveredId === design.id ? 1 : 0 }}
+                className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end justify-between p-4"
+              >
+                <h3 className="text-white font-medium text-sm truncate flex-1 mr-2">
+                  {design.title}
+                </h3>
+                <div className="flex items-center gap-2" onClick={(e) => e.preventDefault()}>
+                  <BookmarkButton 
+                    designId={design.id}
+                    className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors backdrop-blur-sm text-white"
+                  />
+                </div>
+              </motion.div>
+            </div>
+          </Link>
 
           {/* Designer info */}
           <div className="mt-3 flex items-center justify-between">
