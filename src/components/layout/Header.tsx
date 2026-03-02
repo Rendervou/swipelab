@@ -10,9 +10,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2, Users, MessageCircle, Bookmark, Compass, ShoppingBag, Settings } from 'lucide-react';
+import { Upload, LayoutDashboard, User, LogOut, Menu, X, Wand2, Users, MessageCircle, Bookmark, Compass, ShoppingBag, Settings, Search, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import swipelabLogo from '@/assets/swipelab-logo.png';
@@ -46,7 +47,17 @@ export const Header = () => {
     navigate('/');
   };
 
+  // Nav items for desktop nav bar (excluding upload/messages which get dedicated buttons)
   const navItems = [
+    { href: '/feed', label: t('nav.explore'), icon: Compass },
+    { href: '/designers', label: t('nav.designers'), icon: Users },
+    { href: '/services', label: t('nav.services'), icon: ShoppingBag },
+    { href: '/ai-assistant', label: t('nav.aiAssistant'), icon: Wand2 },
+    { href: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
+  ];
+
+  // Mobile nav includes all items
+  const mobileNavItems = [
     { href: '/feed', label: t('nav.explore'), icon: Compass },
     { href: '/designers', label: t('nav.designers'), icon: Users },
     { href: '/services', label: t('nav.services'), icon: ShoppingBag },
@@ -93,93 +104,138 @@ export const Header = () => {
         )}
 
         {/* Right side */}
-        <div className="flex items-center gap-1.5 md:gap-2">
+        <div className="flex items-center gap-1 md:gap-1.5">
           <LanguageSelector variant="minimal" />
           <ThemeToggle />
-          {user ? (
-            <>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 md:h-9 md:w-9 rounded-full p-0">
-                    <Avatar className="h-8 w-8 md:h-9 md:w-9 ring-2 ring-border transition-all hover:ring-primary/30">
-                      <AvatarImage src={user.user_metadata?.avatar_url} />
-                      <AvatarFallback className="bg-primary/10 text-primary font-semibold text-sm">
-                        {user.email?.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    {unreadMessages > 0 && (
-                      <motion.span 
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-accent text-accent-foreground text-[10px] flex items-center justify-center font-medium"
-                      >
-                        {unreadMessages > 9 ? '9+' : unreadMessages}
-                      </motion.span>
-                    )}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 rounded-xl p-1">
-                  <div className="px-3 py-3 border-b border-border/50">
-                    <p className="font-medium text-sm truncate">{user.user_metadata?.name || user.email}</p>
-                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                  </div>
-                  <div className="py-1">
-                    <DropdownMenuItem onClick={() => navigate(`/designer/${user.id}`)} className="cursor-pointer rounded-lg text-sm">
-                      <User className="mr-2 h-4 w-4 text-muted-foreground" />
-                      {t('nav.myProfile')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer rounded-lg text-sm">
-                      <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
-                      {t('nav.editProfile')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/messages')} className="cursor-pointer rounded-lg text-sm">
-                      <MessageCircle className="mr-2 h-4 w-4 text-muted-foreground" />
-                      {t('nav.messages')}
-                      {unreadMessages > 0 && (
-                        <Badge variant="destructive" className="ml-auto h-5 px-1.5 text-[10px]">
-                          {unreadMessages}
-                        </Badge>
-                      )}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/bookmarks')} className="cursor-pointer rounded-lg text-sm">
-                      <Bookmark className="mr-2 h-4 w-4 text-muted-foreground" />
-                      {t('nav.savedDesigns')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer rounded-lg text-sm">
-                      <LayoutDashboard className="mr-2 h-4 w-4 text-muted-foreground" />
-                      {t('nav.dashboard')}
-                    </DropdownMenuItem>
-                  </div>
-                  <DropdownMenuSeparator />
-                  <div className="py-1">
-                    <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer rounded-lg text-sm">
-                      <LogOut className="mr-2 h-4 w-4" />
-                      {t('nav.logout')}
-                    </DropdownMenuItem>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
 
-              {/* Mobile menu toggle */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden h-8 w-8"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={mobileMenuOpen ? 'close' : 'open'}
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-                  </motion.div>
-                </AnimatePresence>
-              </Button>
-            </>
+          {user ? (
+            <TooltipProvider delayDuration={300}>
+              <div className="flex items-center gap-0.5 md:gap-1">
+                {/* Quick Action: Search/Explore */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={isActive('/feed') ? 'secondary' : 'ghost'}
+                      size="icon"
+                      className="h-9 w-9 rounded-full lg:hidden"
+                      onClick={() => navigate('/feed')}
+                    >
+                      <Search className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t('nav.explore')}</TooltipContent>
+                </Tooltip>
+
+                {/* Quick Action: Upload — always visible, highlighted */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={isActive('/upload') ? 'secondary' : 'ghost'}
+                      size="icon"
+                      className={`h-9 w-9 rounded-full relative ${
+                        !isActive('/upload') ? 'text-primary hover:bg-primary/10' : ''
+                      }`}
+                      onClick={() => navigate('/upload')}
+                    >
+                      <Plus className="h-[18px] w-[18px]" strokeWidth={2.5} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t('nav.upload')}</TooltipContent>
+                </Tooltip>
+
+                {/* Quick Action: Messages — always visible with badge */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={isActive('/messages') ? 'secondary' : 'ghost'}
+                      size="icon"
+                      className="h-9 w-9 rounded-full relative"
+                      onClick={() => navigate('/messages')}
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      {unreadMessages > 0 && (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] flex items-center justify-center font-bold"
+                        >
+                          {unreadMessages > 9 ? '9+' : unreadMessages}
+                        </motion.span>
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>{t('nav.messages')}</TooltipContent>
+                </Tooltip>
+
+                {/* Divider */}
+                <div className="h-5 w-px bg-border/60 mx-0.5 hidden md:block" />
+
+                {/* Avatar dropdown — account/settings only */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 md:h-9 md:w-9 rounded-full p-0">
+                      <Avatar className="h-8 w-8 md:h-9 md:w-9 ring-2 ring-border transition-all hover:ring-primary/30">
+                        <AvatarImage src={user.user_metadata?.avatar_url} />
+                        <AvatarFallback className="bg-primary/10 text-primary font-semibold text-sm">
+                          {user.email?.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 rounded-xl p-1">
+                    <div className="px-3 py-3 border-b border-border/50">
+                      <p className="font-medium text-sm truncate">{user.user_metadata?.name || user.email}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                    <div className="py-1">
+                      <DropdownMenuItem onClick={() => navigate(`/designer/${user.id}`)} className="cursor-pointer rounded-lg text-sm">
+                        <User className="mr-2 h-4 w-4 text-muted-foreground" />
+                        {t('nav.myProfile')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer rounded-lg text-sm">
+                        <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
+                        {t('nav.editProfile')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate('/bookmarks')} className="cursor-pointer rounded-lg text-sm">
+                        <Bookmark className="mr-2 h-4 w-4 text-muted-foreground" />
+                        {t('nav.savedDesigns')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer rounded-lg text-sm">
+                        <LayoutDashboard className="mr-2 h-4 w-4 text-muted-foreground" />
+                        {t('nav.dashboard')}
+                      </DropdownMenuItem>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <div className="py-1">
+                      <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer rounded-lg text-sm">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        {t('nav.logout')}
+                      </DropdownMenuItem>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* Mobile menu toggle */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden h-8 w-8"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={mobileMenuOpen ? 'close' : 'open'}
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+                    </motion.div>
+                  </AnimatePresence>
+                </Button>
+              </div>
+            </TooltipProvider>
           ) : (
             <div className="flex items-center gap-1.5">
               <Link to="/login">
@@ -204,7 +260,7 @@ export const Header = () => {
             className="lg:hidden border-t border-border/40 overflow-hidden"
           >
             <div className="container py-3 flex flex-col gap-0.5">
-              {navItems.map((item, i) => (
+              {mobileNavItems.map((item, i) => (
                 <motion.div
                   key={item.href}
                   initial={{ opacity: 0, x: -16 }}
