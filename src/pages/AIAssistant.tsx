@@ -75,6 +75,9 @@ const AIAssistant = () => {
     },
   ];
 
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -84,16 +87,18 @@ const AIAssistant = () => {
       return;
     }
 
+    setUploadedFile(file);
     const reader = new FileReader();
     reader.onload = (event) => {
-      setUploadedImage(event.target?.result as string);
+      setPreviewUrl(event.target?.result as string);
+      setUploadedImage('pending');
       setAnalysisResult(null);
     };
     reader.readAsDataURL(file);
   };
 
   const analyzeDesign = async (type: AnalysisType) => {
-    if (!uploadedImage) {
+    if (!uploadedFile) {
       toast.error(t('ai.uploadFirst'));
       return;
     }
@@ -103,9 +108,26 @@ const AIAssistant = () => {
     setSelectedTab(type);
 
     try {
+      // Upload image to storage first to get a public URL
+      const fileExt = uploadedFile.name.split('.').pop();
+      const fileName = `ai-analysis/${crypto.randomUUID()}.${fileExt}`;
+      
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('designs')
+        .upload(fileName, uploadedFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('designs')
+        .getPublicUrl(fileName);
+
+      const publicUrl = urlData.publicUrl;
+      setUploadedImage(publicUrl);
+
       const { data, error } = await supabase.functions.invoke('analyze-design', {
         body: {
-          imageUrl: uploadedImage,
+          imageUrl: publicUrl,
           analysisType: type,
           customPrompt: customPrompt || undefined,
         },
@@ -207,7 +229,7 @@ const AIAssistant = () => {
 
         {/* Upload Area */}
         <AnimatePresence mode="wait">
-          {!uploadedImage ? (
+          {!previewUrl ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -228,7 +250,7 @@ const AIAssistant = () => {
               <Card className="p-4">
                 <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
                   <img 
-                    src={uploadedImage} 
+                    src={previewUrl} 
                     alt="Uploaded design" 
                     className="w-full h-full object-contain"
                   />
@@ -302,7 +324,7 @@ const AIAssistant = () => {
                 onClick={() => fileInputRef.current?.click()}
                 className="shrink-0"
               >
-                {uploadedImage ? <ImageIcon className="h-4 w-4" /> : <Upload className="h-4 w-4" />}
+                {previewUrl ? <ImageIcon className="h-4 w-4" /> : <Upload className="h-4 w-4" />}
               </Button>
               <Input
                 placeholder={t('ai.inputPlaceholder')}
@@ -315,7 +337,7 @@ const AIAssistant = () => {
                 variant="gradient"
                 size="icon"
                 onClick={handleSubmit}
-                disabled={!uploadedImage || isAnalyzing}
+                disabled={!uploadedFile || isAnalyzing}
                 className="shrink-0"
               >
                 {isAnalyzing ? (
